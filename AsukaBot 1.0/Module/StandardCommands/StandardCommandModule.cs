@@ -175,7 +175,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                 }
                 else
                 {
-                    await ReplyAsync("");
+                    await ReplyAsync("discord does not allow deleting over 100 messages at a time");
                 }
             }
             catch

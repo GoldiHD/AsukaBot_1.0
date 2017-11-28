@@ -95,6 +95,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ConsoleChecker.cs" />
+    <Compile Include="Classes\SaveDataToTxt.cs" />
+    <Compile Include="Classes\SingleTon.cs" />
+    <Compile Include="Core\MyBot.cs" />
+    <Compile Include="Module\Games\DnDModule.cs" />
+    <Compile Include="Module\Games\GameBank.cs" />
+    <Compile Include="Module\Games\GamesModule.cs" />
+    <Compile Include="Module\RPG\Logic\Enemy\EnemyBase.cs" />
+    <Compile Include="Module\RPG\Logic\Enemy\MonsterDatabase.cs" />
+    <Compile Include="Module\RPG\Logic\Inventory.cs" />
+    <Compile Include="Module\RPG\Logic\Items\ArmorItem.cs" />
+    <Compile Include="Module\RPG\Logic\Items\BaseItem.cs" />
+    <Compile Include="Module\RPG\Logic\Items\Consumable.cs" />
+    <Compile Include="Module\RPG\Logic\Items\CraftingItem.cs" />
+    <Compile Include="Module\RPG\Logic\Items\MagicAttacks.cs" />
+    <Compile Include="Module\RPG\Logic\Items\WeaponMagicEffect.cs" />
+    <Compile Include="Module\RPG\Logic\Items\WeaponsItem.cs" />
+    <Compile Include="Module\RPG\Logic\Player.cs" />
+    <Compile Include="Module\RPG\Logic\Questing\Encounter.cs" />
+    <Compile Include="Module\RPG\Logic\Questing\QuestManager.cs" />
+    <Compile Include="Module\RPG\Logic\Stats.cs" />
+    <Compile Include="Module\RPG\RPG.cs" />
     <Compile Include="Module\StandardCommands\StandardCommandModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +124,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="assets\" />
+    <Folder Include="Classes\Services\" />
+    <Folder Include="Module\Music\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
