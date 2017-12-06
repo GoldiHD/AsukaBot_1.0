@@ -14,7 +14,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         private bool Craftable;
         private List<CraftingItemInItem> CraftingItems;
 
-        public WeaponsItem(string name, string itemdescribe, int damge, PhyDamgeType mydamgephytype, int price, bool buyable, int itemvalue, bool questItem, bool craftable, List<CraftingItemInItem> craftingItems, Rarity rare)
+
+        public WeaponsItem(string name, string itemdescribe, int damge, PhyDamgeType mydamgephytype, int price, bool buyable, int itemvalue, bool questItem, bool craftable, List<ItemType> itemDefine, List<CraftingItemInItem> craftingItems, Rarity rare)
         {
             Name = name;
             ItemDescribe = itemdescribe;
@@ -26,8 +27,9 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             QuestItem = questItem;
             Craftable = craftable;
             CraftingItems = craftingItems;
+            MyItemType = itemDefine;
             MyRare = rare;
-
+            
         }
 
         public Attack attack()
@@ -53,6 +55,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             ItemValue = itemvalue;
             MyWeapoEffect = myweaponeffect;
             QuestItem = questItem;
+            
         }
 
         public int GetDamge()

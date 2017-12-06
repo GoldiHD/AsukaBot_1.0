@@ -15,7 +15,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         private Armorpiece ArmorPos;
 
 
-        public ArmorItem(string name, string itemdescribe, int ac, ArmorType armor, int price, bool buyable, int itemvalue, bool questitem, bool craftable, List<CraftingItemInItem> craftingItems, Rarity rare, Armorpiece armorpos)
+        public ArmorItem(string name, string itemdescribe, int ac, ArmorType armor, int price, bool buyable, int itemvalue, bool questitem, bool craftable, List<CraftingItemInItem> craftingItems, Rarity rare, Armorpiece armorpos, List<ItemType> itemDefine)
         {
             MyRare = rare;
             Buyable = buyable;
@@ -29,7 +29,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             Crafable = craftable;
             CraftingItems = craftingItems;
             ArmorPos = armorpos;
-
+            MyItemType = itemDefine;
         }
 
         public ArmorItem(string name, string itemdescribe, int ac, ArmorType armor, int price, bool buyable, int itemvalue, bool questitem, bool craftable, List<CraftingItem> craftingItems, Rarity rare, Armorpiece armorpos, ArmorEnchant enchant)

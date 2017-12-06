@@ -12,7 +12,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         private int ItemStrength;
         private ConsumableItem MyConsuamableType;
 
-        public Consumable(string name, string itemdescribe, bool buyable, int price, int itemStrength, bool questitem, Rarity rare, ConsumableItem itemType)
+        public Consumable(string name, string itemdescribe, bool buyable, int price, int itemStrength, bool questitem, Rarity rare, ConsumableItem itemType, List<ItemType> itemDefine)
         {
             Name = name;
             ItemDescribe = itemdescribe;
@@ -22,6 +22,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             QuestItem = questitem;
             MyRare = rare;
             MyConsuamableType = itemType;
+            MyItemType = itemDefine;
             switch (MyConsuamableType)
             {
                 case ConsumableItem.Healing:

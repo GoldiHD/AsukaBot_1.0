@@ -15,9 +15,9 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         protected int ItemValue;
         protected string ItemDescribe;
         protected bool QuestItem;
-        protected ItemType MyItemType;
+        protected List<ItemType> MyItemType;
 
-        public BaseItem(int price, bool buyable, string name, int itemValue, string itemDescribe, bool questItem, Rarity rare, ItemType myitemtype)
+        public BaseItem(int price, bool buyable, string name, int itemValue, string itemDescribe, bool questItem, Rarity rare)
         {
             Price = price;
             Buyable = buyable;
@@ -26,7 +26,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             ItemDescribe = itemDescribe;
             QuestItem = questItem;
             MyRare = rare;
-            MyItemType = myitemtype;
         }
 
         public string GetFlavorText()
@@ -39,7 +38,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
         }
 
-        public ItemType GetItemType()
+        public List<ItemType> GetItemType()
         {
             return MyItemType;
         }
@@ -86,7 +85,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     public enum ItemType
     {
-        Weapon, Magic, Craftingitem, Armor, Consumable
+        Weapon, Magic, Craftingitem, Armor, Consumable, Iron, Steel, Dragon, Leather, Light, Medium, Heavy, Head, Legs, Hands, Chest, Wood, Metal, Demon, Slash, Blunt, Punture, Heal, Buff, Food
     }
 
     public enum Rarity

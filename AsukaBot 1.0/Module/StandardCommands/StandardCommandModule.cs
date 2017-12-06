@@ -205,4 +205,4 @@ namespace AsukaBot_1._0.Module.StandardCommands
 //    EmbedBuilder build = new EmbedBuilder();
 //    build.AddField("Kazuma", "desu").AddInlineField("Kazuma", "desu");
 //    await ReplyAsync("", false, build.Build());
-//}
+//}      

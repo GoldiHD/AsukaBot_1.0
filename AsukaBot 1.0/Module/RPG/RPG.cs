@@ -503,7 +503,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             await PowerIncrease(amount);
         }
 
-       [Command("_magic")]
+        [Command("_magic")]
         public async Task MagicIncrease(int amount)
         {
             int temp = DoIExist(Context.User.Username);
@@ -680,10 +680,129 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
         #region Market
         [Command("CheckMarket")]
-        public async Task CheckMarketItems(string itemtype)
+        public async Task CheckMarketItems(string itemtype = null)
         {
-            string temp;
-            CheckUpList 
+            EmbedBuilder builder = new EmbedBuilder();
+            List<BaseItem> Holder = new List<BaseItem>();
+            ItemType PickedType = new ItemType();
+            builder.WithTitle("Market");
+
+            if (itemtype == null)
+            {
+                for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
+                {
+                    if (CheckUpList.GetAllItemsList()[i].GetBuyableState())
+                    {
+                        Holder.Add(CheckUpList.GetAllItemsList()[i]);
+                    }
+                }
+                builder.WithTitle("Market");
+                builder.WithDescription("filter: None");
+                int TempCounter = 0;
+
+                for (int i = 0; i < Holder.Count; i++)
+                {
+
+                    if(TempCounter == 25)
+                    {
+                        await Context.Channel.SendMessageAsync("", false, builder.Build());
+                        builder = new EmbedBuilder();
+                        TempCounter = 0;
+                        builder.WithTitle("Market");
+                        builder.WithDescription("filter: None");
+                    }
+                    builder.AddField(Holder[i].Getname(), "Price: " + Holder[i].GetPrice().ToString());
+                    TempCounter++;
+                }
+
+                await ReplyAsync("", false, builder.Build());
+            }
+            else
+            {
+                switch (itemtype.ToLower())
+                {
+                    case "weapon":
+                        builder.WithDescription("filter: Weapons");
+                        PickedType = ItemType.Weapon;
+                        break;
+
+                    case "armor":
+                        builder.WithDescription("filter: Armor");
+                        PickedType = ItemType.Armor;
+                        break;
+
+                    case "consumable":
+                        builder.WithDescription("filter: Consumable");
+                        PickedType = ItemType.Consumable;
+                        break;
+
+                    case "craftingitem":
+                        builder.WithDescription("filter: Crafting item");
+                        PickedType = ItemType.Craftingitem;
+                        break;
+
+                    case "iron":
+                        builder.WithDescription("filter: Iron");
+                        PickedType = ItemType.Iron;
+                        break;
+
+                    case "steel":
+                        builder.WithDescription("filter: Steel");
+                        PickedType = ItemType.Steel;
+                        break;
+
+                    case "dragon":
+                        builder.WithDescription("filter: Dragon");
+                        PickedType = ItemType.Dragon;
+                        break;
+
+                    case "leather":
+                        builder.WithDescription("filter: Leather");
+                        PickedType = ItemType.Leather;
+                        break;
+
+                    case "light":
+                        builder.WithDescription("filter: Light");
+                        PickedType = ItemType.Light;
+                        break;
+
+                    case "medium":
+                        builder.WithDescription("filter: Medium");
+                        PickedType = ItemType.Medium;
+                        break;
+
+                    default:
+                        builder.WithDescription("no filter like that exists");
+                        break;
+                }
+
+                try
+                {
+                    for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
+                    {
+                        if (CheckUpList.GetAllItemsList()[i].GetBuyableState() == true)
+                        {
+                            List<ItemType> Temp = CheckUpList.GetAllItemsList()[i].GetItemType();
+
+                            for (int x = 0; i < Temp.Count; x++)
+                            {
+                                if (Temp[x] == PickedType)
+                                {
+                                    Holder.Add(CheckUpList.GetAllItemsList()[i]);
+                                }
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+
+
         }
         #endregion
 

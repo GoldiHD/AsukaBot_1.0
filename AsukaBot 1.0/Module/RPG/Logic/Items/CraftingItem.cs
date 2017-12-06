@@ -9,13 +9,14 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
     class CraftingItem : BaseItem
     {
         private string Location;
-        public CraftingItem(string name, string itemdescribe, int price, bool buyable, Rarity rare)
+        public CraftingItem(string name, string itemdescribe, int price, bool buyable, Rarity rare, List<ItemType> itemDefine)
         {
             Name = name;
             ItemDescribe = itemdescribe;
             Price = price;
             Buyable = buyable;
             MyRare = rare;
+            MyItemType = itemDefine;
         }
 
         public CraftingItem(CraftingItem me)
