@@ -317,6 +317,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_encounter")]
         public async Task EnterEncounter()
         {
+            EmbedBuilder builder = new EmbedBuilder();
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
@@ -326,10 +327,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
             {
                 if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
                 {
+                    builder.WithTitle("Encounter").WithDescription(Context.User.Username).WithColor(Color.Blue);
                     AllPlayers[temp].SetPlayerStates(PlayerStates.Encounter);
                     AllPlayers[temp].SetQuestManager(new QuestManager());
                     AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], AllPlayers[temp].GetPlayerState());
-                    await Context.Channel.SendMessageAsync(Context.User.Username + " entered an encounter with a " + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName());
+                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName());
+                    await ReplyAsync("", false, builder.Build());
                 }
                 else
                 {
@@ -365,6 +368,9 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_attack")]
         public async Task Attack()
         {
+            EmbedBuilder builder = new EmbedBuilder();
+            Stats Statsholder;
+            builder.WithTitle("Attack").WithDescription(Context.User.Username).WithColor(Color.Red);
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
@@ -372,20 +378,23 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
             else
             {
+                Statsholder = AllPlayers[temp].GetStats();
                 if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
                 {
                     await Context.Channel.SendMessageAsync("You're not in combat and so can't attack anything");
                 }
                 else
                 {
-                    await Context.Channel.SendMessageAsync(AllPlayers[temp].Attack());
+                    builder.AddField("attack",AllPlayers[temp].Attack());
+                    builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
+                    builder.AddField(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + "'s health", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetMaxHP());
                     if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() <= 0)
                     {
-                        await Context.Channel.SendMessageAsync(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + " has died and you got " + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP() + " xp");
-                        await Context.Channel.SendMessageAsync(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetLoot(AllPlayers[temp]));
+                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP());
+                        builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetLoot(AllPlayers[temp]));
                         try
                         {
-                            await Context.Channel.SendMessageAsync(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetGold(AllPlayers[temp]));
+                            builder.AddField("Gold" ,AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetGold(AllPlayers[temp])).ToString();  
                         }
                         catch (Exception ex)
                         {
@@ -393,7 +402,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         }
                         if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP()))
                         {
-                            await Context.Channel.SendMessageAsync("You have level up, you're now level " + AllPlayers[temp].GetPlayerLvl());
+                            builder.AddField("Level up", "");
                         }
                         switch (AllPlayers[temp].GetPlayerState())
                         {
@@ -419,6 +428,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                 break;
                         }
                     }
+                    await ReplyAsync("", false, builder.Build());
                 }
             }
         }
@@ -451,12 +461,32 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_stats")]
         public async Task StatsDisplay()
         {
-            await Context.Channel.SendMessageAsync(GetStats(Context.User.Username));
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.WithTitle("Stats").Color = Color.Orange;
+            builder.WithDescription(Context.User.Username);
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error please try again");
+            }
+            else
+            {
+                Stats Statsholder = AllPlayers[temp].GetStats();
+                builder.AddInlineField("Power", Statsholder.GetPower().GetPowerLvl());
+                builder.AddInlineField("Magic", Statsholder.GetMagic().GetMagicLvl());
+                builder.AddInlineField("Dexterity", Statsholder.GetDexterity().GetDexterityLvl());
+                builder.AddInlineField("Intellegenc", Statsholder.GetIntellegence().GetIntellegencLvl());
+                builder.AddInlineField("Vitallity", Statsholder.GetVitallity().GetVitallityLvl());
+                builder.AddInlineField("Luck", Statsholder.GetLuck().GetLuckLvl());
+
+                await Context.Channel.SendMessageAsync("", false, builder.Build());
+            }
         }
 
         [Command("status")]
         public async Task StatusDisplay()
         {
+            Stats Statsholder;
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
@@ -464,7 +494,15 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
             else
             {
-                await Context.Channel.SendMessageAsync(AllPlayers[temp].GetGeneralStats());
+                Statsholder = AllPlayers[temp].GetStats();
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.WithTitle("Status").WithDescription(Context.User.Username).WithColor(Color.Blue);
+                builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
+                builder.AddField("Armor", AllPlayers[temp].GetAC());
+                builder.AddField("Level", AllPlayers[temp].GetPlayerLvl());
+                builder.AddField("Exp", AllPlayers[temp].GetExpCurrent() + "/" + AllPlayers[temp].GetExpForNextLvl());
+                builder.AddField("Available stats points", Statsholder.GetStatPoints());
+                await Context.Channel.SendMessageAsync("", false, builder.Build());
             }
         }
 
@@ -703,7 +741,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 for (int i = 0; i < Holder.Count; i++)
                 {
 
-                    if(TempCounter == 25)
+                    if (TempCounter == 25)
                     {
                         await Context.Channel.SendMessageAsync("", false, builder.Build());
                         builder = new EmbedBuilder();
@@ -804,6 +842,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
 
         }
+
+        public async Task BuyFromMarket(string itemtype = null)
+        {
+
+        }
+
         #endregion
 
         private void CheckHealth(string username)
@@ -850,22 +894,6 @@ namespace AsukaBot_1._0.Module.Music.Logic
             for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
             {
                 data += CheckUpList.GetAllItemsList()[i].Getname() + "\n";
-            }
-            return data;
-        }
-
-        private string GetStats(string username)
-        {
-            string data = "";
-            int temp = DoIExist(username);
-            if (temp == -1)
-            {
-                data = "Error please try again";
-            }
-            else
-            {
-                Stats Statsholder = AllPlayers[temp].GetStats();
-                data = "Power: " + Statsholder.GetPower().GetPowerLvl() + "\n" + "Magic: " + Statsholder.GetMagic().GetMagicLvl() + "\n" + "Dexterity: " + Statsholder.GetDexterity().GetDexterityLvl() + "\n" + "Intellegenc: " + Statsholder.GetIntellegence().GetIntellegencLvl() + "\n" + "Vitallity: " + Statsholder.GetVitallity().GetVitallityLvl() + "\n" + "Luck: " + Statsholder.GetLuck().GetLuckLvl();
             }
             return data;
         }
