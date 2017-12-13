@@ -49,6 +49,21 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return ItemUsed.GetEffect().UseAblility(this);
         }
 
+        public int GetExpCurrent()
+        {
+            return expCurrent;
+        }
+
+        public int GetExpForNextLvl()
+        {
+            return NextLvlExp;
+        }
+
+        public int GetAC()
+        {
+            return AC;
+        }
+
 
         private void Levelup()
         {
@@ -141,7 +156,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return Level;
         }
 
-        public int CounterAttack()
+        public string CounterAttack()
         {
             int DamgeAfterAc;
             int WeaponDamge;
@@ -162,8 +177,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 DamgeAfterAc = 0;
             }
             questManager.GetCombatManager().GetEnemy().Attack(this, DamgeAfterAc);
-            Console.WriteLine("Damge after ac: " + DamgeAfterAc + " ");
-            return DamgeAfterAc;
+            return DamgeAfterAc.ToString();
         }
 
         public string Attack()
@@ -205,11 +219,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
             if (DamgeAfterAc == 0)
             {
-                return "You attacked the " + questManager.GetCombatManager().GetEnemy().GetName() + "missed" + " and got attacked for " + CounterAttack();
+                return "missed";
             }
             else
             {
-                return "You attacked the " + questManager.GetCombatManager().GetEnemy().GetName() + " for " + DamgeAfterAc + " and got attacked for " + CounterAttack();
+                return  DamgeAfterAc.ToString();
             }
         }
 
