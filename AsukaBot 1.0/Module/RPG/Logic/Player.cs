@@ -96,21 +96,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
         }
 
-        public int GetExpCurrent()
-        {
-            return expCurrent;
-        }
-
-        public int GetExpForNextLvl()
-        {
-            return NextLvlExp;
-        }
-
-        public int GetAC()
-        {
-            return AC;
-        }
-
         public QuestManager GetQuestManager()
         {
             return questManager;
