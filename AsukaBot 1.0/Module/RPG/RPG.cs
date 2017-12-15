@@ -370,6 +370,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         {
             EmbedBuilder builder = new EmbedBuilder();
             Stats Statsholder;
+            builder.WithTitle("Attack").WithDescription(Context.User.Username).WithColor(Color.Red);
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
@@ -384,9 +385,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    builder.WithTitle("Attack").WithColor(Color.Red);
-                    builder.AddField(Context.User.Username, AllPlayers[temp].Attack());
-                    builder.AddField(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName(), AllPlayers[temp].CounterAttack());
+                    builder.AddField("attack",AllPlayers[temp].Attack());
                     builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
                     if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() >= 0)
                     {
