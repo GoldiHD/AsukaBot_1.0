@@ -27,13 +27,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private ArmorItem[] EquippedArmor = new ArmorItem[4]; //1 helmet, 2 Chest, 3 Legs, 4 Hands
         private int StatPointsLvlCounter = 0;
         private int AC = 0;
-
+        private bool HardcoreMode = false;
 
         public Player(string username)
         {
             Username = username;
             MyPlayerState = PlayerStates.Rest;
             MyAttackType = AttackType.Melee;
+        }
+
+        public bool GetHardcoreState()
+        {
+            return HardcoreMode;
         }
 
         public string GetGeneralStats()

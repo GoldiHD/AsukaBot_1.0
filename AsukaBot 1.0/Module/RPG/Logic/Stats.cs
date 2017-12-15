@@ -275,6 +275,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
         }
 
+        public void GainFullHealth()
+        {
+            Health = MaxHealth;
+        }
+
         public int GetVitallityLvl()
         {
             return Lvl;

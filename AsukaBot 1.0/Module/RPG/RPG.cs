@@ -396,46 +396,66 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     {
                         builder.AddField(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + "'s health", "0" + "/" + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetMaxHP());
                     }
-                    if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() <= 0)
+                    if (AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() >= 1)
                     {
-                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP());
-                        builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetLoot(AllPlayers[temp]));
-                        try
+                        if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() <= 0)
                         {
-                            builder.AddField("Gold" ,AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetGold(AllPlayers[temp])).ToString();  
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                        }
-                        if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP()))
-                        {
-                            builder.AddField("Level up", "");
-                        }
-                        switch (AllPlayers[temp].GetPlayerState())
-                        {
-                            case PlayerStates.Encounter:
-                                AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
-                                AllPlayers[temp].SetQuestManager(null);
-                                break;
+                            builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP());
+                            builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetLoot(AllPlayers[temp]));
+                            try
+                            {
+                                builder.AddField("Gold", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetGold(AllPlayers[temp])).ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
+                            if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP()))
+                            {
+                                builder.AddField("Level up", "");
+                            }
+                            switch (AllPlayers[temp].GetPlayerState())
+                            {
+                                case PlayerStates.Encounter:
+                                    AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                                    AllPlayers[temp].SetQuestManager(null);
+                                    AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                    break;
 
-                            case PlayerStates.Dungeon:
-                                Console.WriteLine("still need more work");
-                                break;
+                                case PlayerStates.Dungeon:
+                                    Console.WriteLine("still need more work");
+                                    break;
 
-                            case PlayerStates.Campaign:
-                                Console.WriteLine("still need more work");
-                                break;
+                                case PlayerStates.Campaign:
+                                    Console.WriteLine("still need more work");
+                                    break;
 
-                            case PlayerStates.CollabBoss:
-                                Console.WriteLine("still need more work");
-                                break;
+                                case PlayerStates.CollabBoss:
+                                    Console.WriteLine("still need more work");
+                                    break;
 
-                            case PlayerStates.Pvp:
-                                Console.WriteLine("still need more work");
-                                break;
+                                case PlayerStates.Pvp:
+                                    Console.WriteLine("still need more work");
+                                    break;
+                            }
                         }
                     }
+                    else
+                    {
+                        if (AllPlayers[temp].GetHardcoreState())
+                        {
+                            builder.AddField("Hardcore death", "you have died on Hardcore, so your character i now no more");
+                            AllPlayers.RemoveAt(temp);
+                        }
+                        else
+                        {
+                            builder.AddField("Dead", "you have died and will escape the mission with no loot");
+                            AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                            AllPlayers[temp].SetQuestManager(null);
+                            AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                        }
+                    }
+
                     await ReplyAsync("", false, builder.Build());
                 }
             }
@@ -491,7 +511,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("status")]
+        [Command("_status")]
         public async Task StatusDisplay()
         {
             Stats Statsholder;
@@ -726,7 +746,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
         #region Market
         [Command("CheckMarket")]
-        public async Task CheckMarketItems(string itemtype = null)
+        public async Task CheckMarketItems(string itemtype = null, int Page = 1)
         {
             EmbedBuilder builder = new EmbedBuilder();
             List<BaseItem> Holder = new List<BaseItem>();
@@ -817,34 +837,108 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         PickedType = ItemType.Medium;
                         break;
 
+                    case "heavy":
+                        builder.WithDescription("filter: Heavy");
+                        PickedType = ItemType.Heavy;
+                        break;
+
+                    case "head":
+                        builder.WithDescription("filter: Head");
+                        PickedType = ItemType.Head;
+                        break;
+
+                    case "legs":
+                        builder.WithDescription("filter: Legs");
+                        PickedType = ItemType.Legs;
+                        break;
+
+                    case "hands":
+                        builder.WithDescription("filter: hands");
+                        PickedType = ItemType.Hands;
+                        break;
+
+                    case "chest":
+                        builder.WithDescription("filter: Chest");
+                        PickedType = ItemType.Chest;
+                        break;
+
+                    case "wood":
+                        builder.WithDescription("filter: Wood");
+                        PickedType = ItemType.Wood;
+                        break;
+
+                    case "metal":
+                        builder.WithDescription("filter: Metal");
+                        PickedType = ItemType.Metal;
+                        break;
+
+                    case "demon":
+                        builder.WithDescription("filter: Demon");
+                        PickedType = ItemType.Demon;
+                        break;
+
+                    case "slash":
+                        builder.WithDescription("filter: Slash");
+                        PickedType = ItemType.Slash;
+                        break;
+
+                    case "blunt":
+                        builder.WithDescription("filter: Blunt");
+                        PickedType = ItemType.Blunt;
+                        break;
+
+                    case "punture":
+                        builder.WithDescription("filter: Punture");
+                        PickedType = ItemType.Punture;
+                        break;
+
+                    case "heal":
+                        builder.WithDescription("filter: Heal");
+                        PickedType = ItemType.Heal;
+                        break;
+
+                    case "buff":
+                        builder.WithDescription("filter: Buff");
+                        PickedType = ItemType.Buff;
+                        break;
+
+                    case "food":
+                        builder.WithDescription("filter: Food");
+                        PickedType = ItemType.Food;
+                        break;
+
                     default:
                         builder.WithDescription("no filter like that exists");
                         break;
                 }
-
-                try
+                for (int i = 0; i < CheckUpList.GetAllItemsList().Count - 1; i++)
                 {
-                    for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
+                    if (CheckUpList.GetAllItemsList()[i].GetBuyableState() == true)
                     {
-                        if (CheckUpList.GetAllItemsList()[i].GetBuyableState() == true)
+                        List<ItemType> Temp = CheckUpList.GetAllItemsList()[i].GetItemType();
+                        for (int x = 0; x <= Temp.Count - 1; x++)
                         {
-                            List<ItemType> Temp = CheckUpList.GetAllItemsList()[i].GetItemType();
-
-                            for (int x = 0; i < Temp.Count; x++)
+                            if (Temp[x] == PickedType)
                             {
-                                if (Temp[x] == PickedType)
-                                {
-                                    Holder.Add(CheckUpList.GetAllItemsList()[i]);
-                                }
+                                Holder.Add(CheckUpList.GetAllItemsList()[i]);
                             }
-
                         }
+                        builder.WithFooter(new EmbedFooterBuilder().WithText("Page 1/1"));
+
                     }
                 }
-                catch (Exception ex)
+                if (Holder.Count > 10) 
                 {
-                    Console.WriteLine(ex);
+
                 }
+                else
+                {
+                    for(int i = 0; i < Holder.Count; i++)
+                    {
+                        builder.AddField(Holder[i].Getname(), "Price: " + Holder[i].GetPrice().ToString());
+                    }
+                }
+                await ReplyAsync("", false, builder.Build());
             }
 
 
