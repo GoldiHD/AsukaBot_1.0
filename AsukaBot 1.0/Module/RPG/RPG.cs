@@ -269,7 +269,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("give")]
+        [Command("_give")]
         public async Task Give(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
             int temp = DoIExist(Context.User.Username);
@@ -385,7 +385,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    builder.AddField("attack",AllPlayers[temp].Attack());
+                    builder.AddField("attack", AllPlayers[temp].Attack());
                     builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
                     if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() >= 0)
                     {
@@ -744,9 +744,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
         #endregion
 
         #region Market
-        [Command("CheckMarket")]
-        public async Task CheckMarketItems(string itemtype = null, int Page = 1)
+        [Command("_CheckMarket")]
+        public async Task CheckMarketItems(int Page = 1, string itemtype = null)
         {
+            int counter = 0;
+            const int PageSize = 5; //change the amount of stuff displayed on pages 
+            List<BaseItem[]> HolderFinal = new List<BaseItem[]>();
             EmbedBuilder builder = new EmbedBuilder();
             List<BaseItem> Holder = new List<BaseItem>();
             ItemType PickedType = new ItemType();
@@ -754,6 +757,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
             if (itemtype == null)
             {
+                
                 for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
                 {
                     if (CheckUpList.GetAllItemsList()[i].GetBuyableState())
@@ -763,23 +767,33 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 builder.WithTitle("Market");
                 builder.WithDescription("filter: None");
-                int TempCounter = 0;
-
-                for (int i = 0; i < Holder.Count; i++)
+                for(int i = 0; i < (int)(Math.Ceiling((double)Holder.Count / PageSize)); i++)
                 {
-
-                    if (TempCounter == 25)
+                    HolderFinal.Add(new BaseItem[PageSize]);
+                    for(int x = 0; x < PageSize; x++)
                     {
-                        await Context.Channel.SendMessageAsync("", false, builder.Build());
-                        builder = new EmbedBuilder();
-                        TempCounter = 0;
-                        builder.WithTitle("Market");
-                        builder.WithDescription("filter: None");
+                        if(!(counter >= Holder.Count))
+                        {
+                            HolderFinal[i][x] = Holder[counter];
+                            counter++;
+                        }
                     }
-                    builder.AddField(Holder[i].Getname(), "Price: " + Holder[i].GetPrice().ToString());
-                    TempCounter++;
                 }
-
+                if(Page == 0 || Page > HolderFinal.Count)
+                {
+                    await ReplyAsync("The give page number was not a vailid choice");
+                }
+                else
+                {
+                    foreach(BaseItem item in HolderFinal[Page -1])
+                    {
+                        if(item != null)
+                        {
+                            builder.AddField(item.Getname(), "Price: " + item.GetPrice().ToString());
+                        }
+                    }
+                    builder.WithFooter(new EmbedFooterBuilder().WithText("Page " + Page + "/" + HolderFinal.Count));
+                }
                 await ReplyAsync("", false, builder.Build());
             }
             else
@@ -908,6 +922,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
                     default:
                         builder.WithDescription("no filter like that exists");
+                        PickedType = ItemType.Default;
                         break;
                 }
                 for (int i = 0; i < CheckUpList.GetAllItemsList().Count - 1; i++)
@@ -922,20 +937,46 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                 Holder.Add(CheckUpList.GetAllItemsList()[i]);
                             }
                         }
-                        builder.WithFooter(new EmbedFooterBuilder().WithText("Page 1/1"));
-
                     }
                 }
-                if (Holder.Count > 10) 
+                if (Holder.Count > PageSize)
                 {
-
+                    
+                    for (int i = 0; i < (int)(Math.Ceiling((double)Holder.Count / PageSize)); i++)
+                    {
+                        HolderFinal.Add(new BaseItem[5]);
+                        for (int x = 0; x < PageSize; x++)
+                        {
+                            if (!(counter >= Holder.Count))
+                            {
+                                HolderFinal[i][x] = Holder[counter];
+                                counter++;
+                            }
+                        }
+                    }
+                    if (Page == 0 || Page > HolderFinal.Count)
+                    {
+                        await ReplyAsync("The give page number was not a vailid choice");
+                    }
+                    else
+                    {
+                        foreach (BaseItem item in HolderFinal[Page - 1])
+                        {
+                            if (item != null)
+                            {
+                                builder.AddField(item.Getname(), "Price: " + item.GetPrice().ToString());
+                            }
+                        }
+                        builder.WithFooter(new EmbedFooterBuilder().WithText("Page " + Page + "/" + HolderFinal.Count));
+                    }
                 }
                 else
                 {
-                    for(int i = 0; i < Holder.Count; i++)
+                    for (int i = 0; i < Holder.Count; i++)
                     {
                         builder.AddField(Holder[i].Getname(), "Price: " + Holder[i].GetPrice().ToString());
                     }
+                    builder.WithFooter(new EmbedFooterBuilder().WithText("Page 1/1"));
                 }
                 await ReplyAsync("", false, builder.Build());
             }
