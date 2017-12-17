@@ -45,6 +45,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 {
                     builder.AddField("Inventory", "Empthy");
                 }
+                builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
                 await ReplyAsync("", false, builder.Build());
 
             }
@@ -222,7 +223,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("_give")]
+        [Command("_give")] //dev tool
         public async Task Give(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
             int temp = DoIExist(Context.User.Username);
@@ -306,11 +307,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
         {
             EmbedBuilder builder = new EmbedBuilder();
             Stats Statsholder;
-            builder.WithTitle("Attack").WithDescription(Context.User.Username).WithColor(Color.Red);
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
-                await Context.Channel.SendMessageAsync("Error, please try again");
+                await ReplyAsync("", false, builder.WithTitle("[ERORR] Acount haven't been created yet, try again").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
             }
             else
             {
@@ -321,7 +321,8 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    builder.AddField("attack", AllPlayers[temp].Attack());
+                    builder.AddField("Your Attack", AllPlayers[temp].Attack()).WithColor(Color.Red);
+                    builder.AddField("Counter attack", AllPlayers[temp].CounterAttack());
                     builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
                     if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() >= 0)
                     {
@@ -390,6 +391,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
                         }
                     }
+                    builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
 
                     await ReplyAsync("", false, builder.Build());
                 }
