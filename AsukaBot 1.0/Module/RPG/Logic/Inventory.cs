@@ -90,6 +90,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             Gold += MoreGold;
         }
 
+        public void BuyStuff(int LessGold)
+        {
+            Gold -= LessGold;
+        }
+
         public bool DoesTimeExistsInInventory(string name)
         {
             bool doesexists = false;
@@ -143,7 +148,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         private void StartingEquipment()
         {
-
+            
         }
 
         public List<BaseItem> GetAllItemsList()

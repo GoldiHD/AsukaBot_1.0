@@ -22,27 +22,31 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_inv")]
         public async Task InventoryCheck()
         {
+            EmbedBuilder builder = new EmbedBuilder();
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
-                await Context.Channel.SendMessageAsync("Your inventory was empty");
+                await ReplyAsync("", false, builder.WithTitle("[ERROR] You're account wasn't instanceiated yet").Build());
             }
             else
             {
+
+                string printString = null;
+                builder.AddField("Gold", AllPlayers[temp].GetInventory().GetGold());
                 if (AllPlayers[temp].GetInventory().GetTheInventory().Count > 0)
                 {
-                    string printString = null;
-                    printString = "Gold: " + AllPlayers[temp].GetInventory().GetGold() + "\n";
                     for (int i = 0; i < AllPlayers[temp].GetInventory().GetTheInventory().Count; i++)
                     {
                         printString += AllPlayers[temp].GetInventory().GetTheInventory()[i].Getname() + "\n";
                     }
-                    await Context.Channel.SendMessageAsync(printString);
+                    builder.AddField("Inventory", printString);
                 }
                 else
                 {
-                    await Context.Channel.SendMessageAsync("empty");
+                    builder.AddField("Inventory", "Empthy");
                 }
+                await ReplyAsync("", false, builder.Build());
+
             }
         }
 
@@ -56,31 +60,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_itemwiki")]
         public async Task ItemWiki()
         {
-            await Context.Channel.SendMessageAsync(@"https://docs.google.com/spreadsheets/d/1XEya_u-TRM1W5NMBb9N0wAg9mCRh51BxGFGLxSznJG8/edit?usp=sharing");
+            EmbedBuilder builder = new EmbedBuilder();
+            await ReplyAsync("", false, builder.AddField("Item wiki", @"https://docs.google.com/spreadsheets/d/1XEya_u-TRM1W5NMBb9N0wAg9mCRh51BxGFGLxSznJG8/edit?usp=sharing").Build());
         }
 
         [Command("_iteminfo")]
         public async Task ItemInfo(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
-            string temp;
-            if (para4 != null)
-            {
-                temp = para1 + " " + para2 + " " + para3 + " " + para4;
-            }
-            else if (para3 != null)
-            {
-                temp = para1 + " " + para2 + " " + para3;
-            }
-
-            else if (para2 != null)
-            {
-                temp = para1 + " " + para2;
-            }
-            else
-            {
-                temp = para1;
-            }
-
+            string temp = ConnectWords(new List<string> { para1, para2, para3, para4 });
             bool ItemExsists = false;
             string data = "";
             for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
@@ -138,24 +125,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_equip")]
         public async Task EquipGear(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
-            string temp;
-            if (para4 != null)
-            {
-                temp = para1 + " " + para2 + " " + para3 + " " + para4;
-            }
-            else if (para3 != null)
-            {
-                temp = para1 + " " + para2 + " " + para3;
-            }
-
-            else if (para2 != null)
-            {
-                temp = para1 + " " + para2;
-            }
-            else
-            {
-                temp = para1;
-            }
+            string temp = ConnectWords(new List<string> { para1, para2, para3, para4 });
             bool doesitemExsits = false;
 
             for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
@@ -225,24 +195,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             else
             {
 
-                string temp2;
-                if (para4 != null)
-                {
-                    temp2 = para1 + " " + para2 + " " + para3 + " " + para4;
-                }
-                else if (para3 != null)
-                {
-                    temp2 = para1 + " " + para2 + " " + para3;
-                }
-
-                else if (para2 != null)
-                {
-                    temp2 = para1 + " " + para2;
-                }
-                else
-                {
-                    temp2 = para1;
-                }
+                string temp2 = ConnectWords(new List<string> { para1, para2, para3, para4 });
 
                 for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
                 {
@@ -281,24 +234,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             {
                 if (Context.User.Username == "Goldi")
                 {
-                    string temp2;
-                    if (para4 != null)
-                    {
-                        temp2 = para1 + " " + para2 + " " + para3 + " " + para4;
-                    }
-                    else if (para3 != null)
-                    {
-                        temp2 = para1 + " " + para2 + " " + para3;
-                    }
-
-                    else if (para2 != null)
-                    {
-                        temp2 = para1 + " " + para2;
-                    }
-                    else
-                    {
-                        temp2 = para1;
-                    }
+                    string temp2 = ConnectWords(new List<string> { para1, para2, para3, para4 });
 
                     AllPlayers[temp].GetInventory().GivePlayerItem(CheckUpList.GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName(temp2)]);
                     await Context.Channel.SendMessageAsync("Goldi spawned: " + temp2);
@@ -757,7 +693,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
             if (itemtype == null)
             {
-                
+
                 for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
                 {
                     if (CheckUpList.GetAllItemsList()[i].GetBuyableState())
@@ -767,27 +703,27 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 builder.WithTitle("Market");
                 builder.WithDescription("filter: None");
-                for(int i = 0; i < (int)(Math.Ceiling((double)Holder.Count / PageSize)); i++)
+                for (int i = 0; i < (int)(Math.Ceiling((double)Holder.Count / PageSize)); i++)
                 {
                     HolderFinal.Add(new BaseItem[PageSize]);
-                    for(int x = 0; x < PageSize; x++)
+                    for (int x = 0; x < PageSize; x++)
                     {
-                        if(!(counter >= Holder.Count))
+                        if (!(counter >= Holder.Count))
                         {
                             HolderFinal[i][x] = Holder[counter];
                             counter++;
                         }
                     }
                 }
-                if(Page == 0 || Page > HolderFinal.Count)
+                if (Page == 0 || Page > HolderFinal.Count)
                 {
                     await ReplyAsync("The give page number was not a vailid choice");
                 }
                 else
                 {
-                    foreach(BaseItem item in HolderFinal[Page -1])
+                    foreach (BaseItem item in HolderFinal[Page - 1])
                     {
-                        if(item != null)
+                        if (item != null)
                         {
                             builder.AddField(item.Getname(), "Price: " + item.GetPrice().ToString());
                         }
@@ -941,7 +877,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 if (Holder.Count > PageSize)
                 {
-                    
+
                     for (int i = 0; i < (int)(Math.Ceiling((double)Holder.Count / PageSize)); i++)
                     {
                         HolderFinal.Add(new BaseItem[5]);
@@ -984,12 +920,70 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
 
         }
+        [Command("_MarketBuy")]
+        public async Task BuyFromMarket(string para1, string para2 = null, string para3 = null, string para4 = null)
+        {
+            bool itemFound = false;
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            string ItemInput = ConnectWords(new List<string> { para1, para2, para3, para4 }).ToLower();
+            if (temp == -1)
+            {
+                await ReplyAsync("", false, builder.WithTitle("[ERROR] You're account wasn't instanceiated yet").Build());
+            }
+            else
+            {
+                for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
+                {
+                    if (ItemInput == CheckUpList.GetAllItemsList()[i].Getname().ToLower())
+                    {
+                        itemFound = true;
+                        if (CheckUpList.GetAllItemsList()[i].GetBuyableState())
+                        {
+                            if (CheckUpList.GetAllItemsList()[i].GetPrice() <= AllPlayers[temp].GetInventory().GetGold())
+                            {
+                                AllPlayers[temp].GetInventory().GivePlayerItem(CheckUpList.GetAllItemsList()[i]);
+                                AllPlayers[temp].GetInventory().BuyStuff(CheckUpList.GetAllItemsList()[i].GetPrice());
+                                await ReplyAsync("", false, builder.WithTitle("You have bought").AddField(CheckUpList.GetAllItemsList()[i].Getname(), "Price: " + CheckUpList.GetAllItemsList()[i].GetPrice()).WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)));
+                            }
+                            else
+                            {
+                                await ReplyAsync("", false, builder.WithTitle("[ERORR] you don't have enought gold to buy this").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            }
+                        }
+                        else
+                        {
+                            await ReplyAsync("", false, builder.WithTitle("[ERORR] item is not for sale on the market").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                        }
+                    }
+                }
+            }
+            if (itemFound == false)
+            {
+                await ReplyAsync("", false, builder.WithTitle("[ERROR] " + ItemInput + " does not exists").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+            }
+        }
 
-        public async Task BuyFromMarket(string itemtype = null)
+        #endregion
+
+        #region Farming
+        [Command("_Mine")]
+        public async Task Minning()
         {
 
         }
 
+        [Command("_Chop")]
+        public async Task ChopWood()
+        {
+
+        }
+
+        [Command("_Forage")]
+        public async Task Forage()
+        {
+
+        }
         #endregion
 
         private void CheckHealth(string username)
@@ -1040,5 +1034,21 @@ namespace AsukaBot_1._0.Module.Music.Logic
             return data;
         }
 
+        private string ConnectWords(List<string> list)
+        {
+            string returndata;
+
+            returndata = list[0];
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (list[i] != null)
+                {
+                    returndata += " ";
+                    returndata += list[i];
+                }
+            }
+
+            return returndata;
+        }
     }
 }
