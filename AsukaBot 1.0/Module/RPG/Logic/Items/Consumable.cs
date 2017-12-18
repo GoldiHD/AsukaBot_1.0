@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
-    class Consumable : BaseItem
+    public class Consumable : BaseItem
     {
         private Effect MyEffect;
         private int ItemStrength;
@@ -50,7 +50,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     }
 
-    class Effect
+    public class Effect
     {
         protected int Strenght;
         //make override here
@@ -64,7 +64,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class Heal : Effect
+    public class Heal : Effect
     {
         private int healeffect;
         public Heal(int strenght)
@@ -81,7 +81,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class Buff : Effect
+    public class Buff : Effect
     {
         private int DamgeIncrease;
         public Buff(int strenght)
@@ -97,7 +97,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class Defense : Effect
+    public class Defense : Effect
     {
         private int DefenseIncrease;
         public Defense(int strenght)
@@ -112,7 +112,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class Food : Effect
+    public class Food : Effect
     {
         private int HealthRegain;
         public Food(int strenght)
@@ -126,7 +126,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class ManaPotion : Effect
+    public class ManaPotion : Effect
     {
 
     }

@@ -8,14 +8,34 @@ using Discord.Commands;
 using AsukaBot_1._0.Module.RPG.Logic;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
+using AsukaBot_1._0.Classes;
 
 namespace AsukaBot_1._0.Module.Music.Logic
 {
     public class RPG : ModuleBase<SocketCommandContext>
     {
 
-        private Inventory CheckUpList = new Inventory();
+        public Inventory CheckUpList = new Inventory();
         private static List<Player> AllPlayers;
+
+        public RPG()
+        {
+            SingleTon.SetRPG(this);
+        }
+
+        public List<Player> GetPlayers()
+        {
+            if (AllPlayers != null)
+            {
+                Console.WriteLine("");
+                return AllPlayers;
+            }
+            else
+            {
+                Console.WriteLine("new");
+                return new List<Player>();
+            }
+        }
 
         #region Items
 
@@ -440,7 +460,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 builder.AddInlineField("Power", Statsholder.GetPower().GetPowerLvl());
                 builder.AddInlineField("Magic", Statsholder.GetMagic().GetMagicLvl());
                 builder.AddInlineField("Dexterity", Statsholder.GetDexterity().GetDexterityLvl());
-                builder.AddInlineField("Intellegenc", Statsholder.GetIntellegence().GetIntellegencLvl());
+                builder.AddInlineField("Intelligence", Statsholder.GetIntellegence().GetIntellegencLvl());
                 builder.AddInlineField("Vitallity", Statsholder.GetVitallity().GetVitallityLvl());
                 builder.AddInlineField("Luck", Statsholder.GetLuck().GetLuckLvl());
 
@@ -467,6 +487,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 builder.AddField("Level", AllPlayers[temp].GetPlayerLvl());
                 builder.AddField("Exp", AllPlayers[temp].GetExpCurrent() + "/" + AllPlayers[temp].GetExpForNextLvl());
                 builder.AddField("Available stats points", Statsholder.GetStatPoints());
+                builder.AddField("Hardcore mode", AllPlayers[temp].GetHardcoreState());
                 await Context.Channel.SendMessageAsync("", false, builder.Build());
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
-    class BaseItem
+    public class BaseItem
     {
         protected Rarity MyRare;
         protected int Price;

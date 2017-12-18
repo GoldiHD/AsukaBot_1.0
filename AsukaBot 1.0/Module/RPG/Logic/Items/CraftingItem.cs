@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
-    class CraftingItem : BaseItem
+    public class CraftingItem : BaseItem
     {
         private string Location;
         public CraftingItem(string name, string itemdescribe, int price, bool buyable, Rarity rare, List<ItemType> itemDefine)
@@ -25,7 +25,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         }
     }
 
-    class CraftingItemInItem
+    public class CraftingItemInItem
     {
         private CraftingItem Item;
         private int Amount;

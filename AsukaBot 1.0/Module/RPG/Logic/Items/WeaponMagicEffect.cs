@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
-    class WeaponMagicEffect
+    public class WeaponMagicEffect
     {
         private Elements MyElement;
 

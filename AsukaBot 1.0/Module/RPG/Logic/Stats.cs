@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
-    class Stats
+    public class Stats
     {
         private int SpendAbleStatPoints = 10;
         private Power MyPower;
@@ -73,7 +73,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
     }
 
-    class Power
+    public class Power
     {
         private int Lvl;
         private float DamageIncrease;
@@ -110,7 +110,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         }
     }
 
-    class Magic
+    public class Magic
     {
         private int Lvl;
         private int MaxMana;
@@ -155,7 +155,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         }
     }
 
-    class Dexterity
+    public class Dexterity
     {
         private float DodgeChance;
         private int Lvl;
@@ -193,7 +193,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         }
     }
 
-    class Intellegenc
+    public class Intellegenc
     {
         private int Lvl;
         private int Tier; /* 10 points equals another tier so 10 = 1  20 = 2 and so on*/
@@ -226,7 +226,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         }
     }
 
-    class Vitallity
+    public class Vitallity
     {
         private int MaxHealth;
         private int Health;
@@ -286,7 +286,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         }
     }
 
-    class Luck
+    public class Luck
     {
         private float CritDamage;
         private int Lvl;

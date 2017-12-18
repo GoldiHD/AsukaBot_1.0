@@ -7,7 +7,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Items;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
-    class Inventory
+    public class Inventory
     {
         private Random RNG = new Random();
         public static List<BaseItem> AllItems;

@@ -7,7 +7,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Items;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 {
-    class EnemyBase
+    public class EnemyBase
     {
         protected List<LootDrop> Loot = new List<LootDrop>();
         protected int GoldDropMax;
@@ -53,7 +53,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
         }
     }
 
-    class NormalEnemy : EnemyBase
+    public class NormalEnemy : EnemyBase
     {
         protected float CritChance = 0.12f;
         protected EnemyType MyType;
@@ -256,7 +256,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 
         public float DamgeModify()
         {
-            return AC / Lvl;
+            return (AC + Lvl)/100;
         }
         public BaseItem GetDropChance()
         {
@@ -281,7 +281,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
         }
     }
 
-    class LootDrop
+    public class LootDrop
     {
         private int DropChance;
         private BaseItem Item;

@@ -9,7 +9,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Enemy;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
-    class Player
+    public class Player
     {
         private Random RNG = new Random();
         private QuestManager questManager;
@@ -21,10 +21,10 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private int expCurrent = 0;
         private int NextLvlExp = 10;
         private AttackType MyAttackType;
-        private int BareHandedDamge = 2;
-        private WeaponsItem EquipedWeaponItem;
+        private const int BareHandedDamge = 1;
+        public WeaponsItem EquipedWeaponItem;
         private MagicAttacks EquipedMagicAttack;
-        private ArmorItem[] EquippedArmor = new ArmorItem[4]; //1 helmet, 2 Chest, 3 Legs, 4 Hands
+        public ArmorItem[] EquippedArmor = new ArmorItem[4]; //1 helmet, 2 Chest, 3 Legs, 4 Hands
         private int StatPointsLvlCounter = 0;
         private int AC = 0;
         private bool HardcoreMode = false;
@@ -189,7 +189,9 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
                     DamgeModifyer = MyStats.GetPower().GetDamgeModify();
 
-                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * DamgeModifyer)) - questManager.GetCombatManager().GetEnemy().DamgeModify());
+                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetCombatManager().GetEnemy().DamgeModify());
+                    Console.WriteLine("AC: "+questManager.GetCombatManager().GetEnemy().DamgeModify());
+                    Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;

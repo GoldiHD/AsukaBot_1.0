@@ -8,7 +8,7 @@ using AsukaBot_1._0.Classes;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Questing
 {
-    class QuestManager
+    public class QuestManager
     {
         private StoryMaker story;
         private CombatManager MyCombatManager;
@@ -76,7 +76,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
         }
     }
 
-    class CombatManager
+    public class CombatManager
     {
         private NormalEnemy CurrentEnemy;
         private MonsterDatabase MyMonsterDatabase = SingleTon.GetMonsterDatabaseInstace();

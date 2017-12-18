@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Questing
 {
-    class Encounter : QuestManager
+    public class Encounter : QuestManager
     {
         private EnemyBase MyEnemy;
 

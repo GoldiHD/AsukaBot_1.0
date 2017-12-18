@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
-    class WeaponsItem : BaseItem
+    public class WeaponsItem : BaseItem
     {
         private int Damge;
         private PhyDamgeType MyDamgePhyType;
@@ -90,7 +90,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     }
 
-    class Attack
+    public class Attack
     {
         private int Damge;
         private PhyDamgeType DamgephyType;

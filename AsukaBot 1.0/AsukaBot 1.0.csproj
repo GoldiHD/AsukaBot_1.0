@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Classes\ConsoleChecker.cs" />
     <Compile Include="Classes\SaveDataToTxt.cs" />
+    <Compile Include="Classes\SaveLoadRPGData.cs" />
     <Compile Include="Classes\SingleTon.cs" />
     <Compile Include="Core\MyBot.cs" />
     <Compile Include="Module\Games\DnDModule.cs" />

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AsukaBot_1._0.Module.RPG.Logic.Enemy;
+﻿using AsukaBot_1._0.Module.RPG.Logic.Enemy;
 using System.Threading;
+using AsukaBot_1._0.Module.Music.Logic;
 
 namespace AsukaBot_1._0.Classes
 {
@@ -13,6 +9,7 @@ namespace AsukaBot_1._0.Classes
         private static MonsterDatabase MyMonsterDatabaseInstace;
         private static ConsoleChecker ConsoleCheckerInstance;
         private static Thread CheckConsole;
+        private static RPG RPGInstance;
 
         public static MonsterDatabase GetMonsterDatabaseInstace()
         {
@@ -38,6 +35,19 @@ namespace AsukaBot_1._0.Classes
             {
                 CheckConsole = MyThread;
                 CheckConsole.Start();
+            }
+        }
+
+        public static RPG GetRPG()
+        {
+            return RPGInstance;
+        }
+
+        public static void SetRPG(RPG instance)
+        {
+            if(RPGInstance == null)
+            {
+                RPGInstance = instance;
             }
         }
     }

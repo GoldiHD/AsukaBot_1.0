@@ -27,11 +27,18 @@ namespace AsukaBot_1._0.Classes
 
         private void CheckCommand()
         {
-            switch (Command)
+            switch (Command.ToLower())
             {
                 case "clear":
                     Console.Clear();
                     break;
+
+                case "saverpg":
+                    SaveLoadRPGData Saver = new SaveLoadRPGData();
+                    Saver.SaveData();
+                    Console.WriteLine("saveed");
+                    break;
+                    
             }
         }
     }
