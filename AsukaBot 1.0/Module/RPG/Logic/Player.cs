@@ -13,14 +13,14 @@ namespace AsukaBot_1._0.Module.RPG.Logic
     {
         private Random RNG = new Random();
         private QuestManager questManager;
-        private PlayerStates MyPlayerState;
+        private PlayerStates MyPlayerState = PlayerStates.Rest;
         private string Username;
         private Inventory MyInventory = new Inventory();
         private Stats MyStats = new Stats(new Power(1), new Magic(1), new Dexterity(1), new Intellegenc(1), new Vitallity(1), new Luck(1));
         private int Level = 1;
         private int expCurrent = 0;
         private int NextLvlExp = 10;
-        private AttackType MyAttackType;
+        private AttackType MyAttackType = AttackType.Melee;
         private const int BareHandedDamge = 1;
         public WeaponsItem EquipedWeaponItem;
         private MagicAttacks EquipedMagicAttack;
@@ -28,6 +28,23 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private int StatPointsLvlCounter = 0;
         private int AC = 0;
         private bool HardcoreMode = false;
+
+        public Player() { }
+
+        public void SetPlayerLevel(int lvl)
+        {
+            Level = lvl;
+        }
+
+        public void SetPlayerCurrentExp(int exp)
+        {
+            expCurrent = exp;
+        }
+
+        public void SetPlayerNextLevelXp(int exp)
+        {
+            NextLvlExp = exp;
+        }
 
         public Player(string username)
         {
@@ -87,6 +104,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 if (StatPointsLvlCounter == 5)
                 {
                     MyStats.AddStatsPoints(5);
+                    StatPointsLvlCounter = 0;
                 }
                 else
                 {
@@ -99,6 +117,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 return false;
             }
+        }
+
+        public void SetUsername(string username)
+        {
+            Username = username;
         }
 
         public QuestManager GetQuestManager()
@@ -129,6 +152,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         public Stats GetStats()
         {
             return MyStats;
+        }
+
+        public void SetStats(Stats NewStats)
+        {
+            MyStats = NewStats;
         }
 
         public Inventory GetInventory()
@@ -235,8 +263,23 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
         }
 
+        /// <summary>
+        /// only used for loading data
+        /// </summary>
+        /// <param name="MoreAc"></param>
+        public void AddAC(int MoreAc)
+        {
+            AC += MoreAc;
+        }
 
-
+        /// <summary>
+        /// only used for loading data
+        /// </summary>
+        /// <param name="inputState"></param>
+        public void SetHardcoreState(bool inputState)
+        {
+            HardcoreMode = inputState;
+        }
         public void AssignArmor(object TheArmor)
         {
             ArmorItem Item = (ArmorItem)TheArmor;

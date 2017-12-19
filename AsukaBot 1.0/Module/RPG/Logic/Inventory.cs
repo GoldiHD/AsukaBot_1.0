@@ -47,16 +47,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 AllItems.Add(new WeaponsItem("Iron Warhammer", "A sturdy iron warhammer, capable of inflicting blunt damage.", 1, PhyDamgeType.Blunt, 1, true, 0, false, true, new List<ItemType>() { ItemType.Iron, ItemType.Weapon, ItemType.Blunt }, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Iron")], 8) }, Rarity.common));
                 AllItems.Add(new WeaponsItem("Iron Axe", "A sturdy iron axe, capable of inflicting slashing damage.", 1, PhyDamgeType.Slash, 1, true, 0, false, true, new List<ItemType>() { ItemType.Iron, ItemType.Weapon, ItemType.Slash }, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Iron")], 2) }, Rarity.common));
                 AllItems.Add(new WeaponsItem("Iron Battleaxe", "A sturdy iron battleaxe, capable of inflicting slashing damage.", 1, PhyDamgeType.Slash, 1, true, 0, false, true, new List<ItemType>() { ItemType.Weapon, ItemType.Iron, ItemType.Slash }, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Iron")], 4) }, Rarity.common));
-                AllItems.Add(new WeaponsItem("Iron Dagger", "A sturdy iron dagger, capable of inflicting puncturing damage.", 1, PhyDamgeType.Punture, 1, true, 0, false, true, new List<ItemType>() {ItemType.Weapon, ItemType.Iron, ItemType.Punture}, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Iron")], 2) }, Rarity.common));
+                AllItems.Add(new WeaponsItem("Iron Dagger", "A sturdy iron dagger, capable of inflicting puncturing damage.", 1, PhyDamgeType.Punture, 1, true, 0, false, true, new List<ItemType>() { ItemType.Weapon, ItemType.Iron, ItemType.Punture }, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Iron")], 2) }, Rarity.common));
                 #endregion
                 #endregion
 
                 #region Armor
                 #region Leather
-                AllItems.Add(new ArmorItem("Leather pants", "", 2, ArmorType.Medium, 4, true, 1, false, true, new List<CraftingItemInItem>() { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 4) }, Rarity.common, Armorpiece.Legs, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Legs, ItemType.Medium}));
-                AllItems.Add(new ArmorItem("Leather chestplate", "", 3, ArmorType.Medium, 7, true, 9, false, true, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 8) }, Rarity.common, Armorpiece.Chest, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Chest, ItemType.Medium}));
-                AllItems.Add(new ArmorItem("Leather gloves", "", 1, ArmorType.Medium, 2, true, 10, false, true, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 2) }, Rarity.common, Armorpiece.Hands, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Hands, ItemType.Medium}));
-                AllItems.Add(new ArmorItem("Leather helmet", "", 1, ArmorType.Medium, 2, true, 11, false, true, new List<CraftingItemInItem>() { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 2) }, Rarity.common, Armorpiece.Head, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Head, ItemType.Medium}));
+                AllItems.Add(new ArmorItem("Leather pants", "", 2, ArmorType.Medium, 4, true, 1, false, true, new List<CraftingItemInItem>() { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 4) }, Rarity.common, Armorpiece.Legs, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Legs, ItemType.Medium }));
+                AllItems.Add(new ArmorItem("Leather chestplate", "", 3, ArmorType.Medium, 7, true, 9, false, true, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 8) }, Rarity.common, Armorpiece.Chest, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Chest, ItemType.Medium }));
+                AllItems.Add(new ArmorItem("Leather gloves", "", 1, ArmorType.Medium, 2, true, 10, false, true, new List<CraftingItemInItem> { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 2) }, Rarity.common, Armorpiece.Hands, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Hands, ItemType.Medium }));
+                AllItems.Add(new ArmorItem("Leather helmet", "", 1, ArmorType.Medium, 2, true, 11, false, true, new List<CraftingItemInItem>() { new CraftingItemInItem((CraftingItem)AllItems[GetItemByName("Leather")], 2) }, Rarity.common, Armorpiece.Head, new List<ItemType>() { ItemType.Leather, ItemType.Armor, ItemType.Head, ItemType.Medium }));
                 #endregion
 
                 #region Iron
@@ -66,13 +66,22 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 #endregion
 
                 #region Consumable
-                AllItems.Add(new Consumable("Lesser Potion of Healing", "it's a small potion that gives you health back", true, 10, 1, false, Rarity.common, ConsumableItem.Healing, new List<ItemType>() { ItemType.Consumable, ItemType.Heal}));
+                AllItems.Add(new Consumable("Lesser Potion of Healing", "it's a small potion that gives you health back", true, 10, 1, false, Rarity.common, ConsumableItem.Healing, new List<ItemType>() { ItemType.Consumable, ItemType.Heal }));
 
                 #endregion
 
                 #endregion
             }
             StartingEquipment();
+        }
+
+        /// <summary>
+        /// only used in loading
+        /// </summary>
+        /// <param name="newgold"></param>
+        public void SetGold(int newgold)
+        {
+            Gold = newgold;
         }
 
         public List<BaseItem> GetTheInventory()
@@ -98,14 +107,14 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         public bool DoesTimeExistsInInventory(string name)
         {
             bool doesexists = false;
-            for(int i = 0; i < TheInventory.Count; i++)
+            for (int i = 0; i < TheInventory.Count; i++)
             {
                 if (TheInventory[i].Getname().ToLower() == name.ToLower())
                 {
                     doesexists = true;
                 }
             }
-            if(doesexists == true)
+            if (doesexists == true)
             {
                 return true;
             }
@@ -118,9 +127,9 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         public int GetItemByName(string name)
         {
             int ItemPlace = 0;
-            for(int i = 0; i < AllItems.Count; i++)
+            for (int i = 0; i < AllItems.Count; i++)
             {
-                if(AllItems[i].Getname().ToLower() == name.ToLower())
+                if (AllItems[i].Getname().ToLower() == name.ToLower())
                 {
                     ItemPlace = i;
                 }
@@ -148,7 +157,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         private void StartingEquipment()
         {
-            
+
         }
 
         public List<BaseItem> GetAllItemsList()

@@ -21,7 +21,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 
                 #region Monster
 
-                Database.Add(new NormalEnemy("Green Slime", 1, 0, 5, 5, 1, 1, 3, 1, 2, EnemyType.Slime, new List<LootDrop>() { new LootDrop(1, Inven.GetAllItemsList()[Inven.GetItemByName("Iron")]) }, 5, 0));
+                Database.Add(new NormalEnemy("Green Slime", 1, 0, 5, 5, 1, 1, 3, 1, 2, EnemyType.Slime, new List<LootDrop>() { new LootDrop(1, Inven.GetAllItemsList()[Inven.GetItemByName("Regular wood")]) }, 5, 0));
                 Database.Add(new NormalEnemy("Blue Slime", 3, 1, 10, 10, 2, 1, 5, 3, 5, EnemyType.Slime, new List<LootDrop>() { new LootDrop(1, Inven.GetAllItemsList()[Inven.GetItemByName("Regular wood")]) }, 5, 0));
                 Database.Add(new NormalEnemy("Goblin Mage", 12, 10, 23, 23, 5, 3, 5, 7, 10, EnemyType.Goblin, new List<LootDrop>() { new LootDrop(1, Inven.GetAllItemsList()[Inven.GetItemByName("Regular wood")]) }, 5, 0));
                 Database.Add(new NormalEnemy("Savage Goblin", 8, 5, 30, 30, 8, 3, 5, 4, 25, EnemyType.Goblin, new List<LootDrop>() { new LootDrop(1, Inven.GetAllItemsList()[Inven.GetItemByName("Regular wood")]) }, 5, 0));

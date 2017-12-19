@@ -17,23 +17,48 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
         public Inventory CheckUpList = new Inventory();
         private static List<Player> AllPlayers;
+        private bool Loaded = false;
 
         public RPG()
         {
             SingleTon.SetRPG(this);
         }
 
+        public void AddPlayer(Player LoadedUser)
+        {
+            if(AllPlayers == null)
+            {
+                AllPlayers = new List<Player>();
+            }
+            AllPlayers.Add(LoadedUser);
+        }
+
         public List<Player> GetPlayers()
         {
             if (AllPlayers != null)
             {
-                Console.WriteLine("");
                 return AllPlayers;
             }
             else
             {
-                Console.WriteLine("new");
                 return new List<Player>();
+            }
+        }
+
+        [Command("RPGStartup")]
+        public async Task Rpgstartup()
+        {
+            if (Loaded == false)
+            {
+                SingleTon.SetRPG(this);
+                SaveLoadRPGData Controler = new SaveLoadRPGData();
+                Controler.LoadData();
+                Loaded = true;
+                await ReplyAsync("Dataloaded");
+            }
+            else
+            {
+                await ReplyAsync("Data already loaded");
             }
         }
 
