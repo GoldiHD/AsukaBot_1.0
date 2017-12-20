@@ -62,6 +62,18 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
+        [Command("Save")]
+        public async Task SaveTemp()
+        {
+            if (Context.User.Username == "Goldi")
+            {
+                SingleTon.SetRPG(this);
+                SaveLoadRPGData Controler = new SaveLoadRPGData();
+                Controler.SaveData();
+                await ReplyAsync("DataSave");
+            }
+        }
+
         #region Items
 
         [Command("_inv")]
