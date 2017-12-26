@@ -147,9 +147,14 @@ namespace AsukaBot_1._0.Classes
         public void LoadData()
         {
             CheckForFile();
+            if (RPGGateWay == null)
+            {
+                RPGGateWay = new RPG();
+            }
             reader = new XmlTextReader(FilePath);
             Player TempNewUserHolder = new Player();
             int[] StatsArray = new int[6];
+            
             reader.WhitespaceHandling = WhitespaceHandling.None;
             while (reader.Read())
             {
@@ -246,6 +251,19 @@ namespace AsukaBot_1._0.Classes
                                 if (reader.ReadString() == "True")
                                 {
                                     TempNewUserHolder.SetHardcoreState(true);
+                                }
+                                break;
+
+                            case "Items":
+                                string temp;
+                                temp = reader.ReadString();
+                                string[] hello = temp.Split(',');
+                                foreach (string itemname in hello)
+                                {
+                                    if (itemname != "")
+                                    {
+                                        TempNewUserHolder.GetInventory().GetTheInventory().Add(TempNewUserHolder.GetInventory().GetAllItemsList()[TempNewUserHolder.GetInventory().GetItemByName(itemname)]);
+                                    }
                                 }
                                 break;
                         }

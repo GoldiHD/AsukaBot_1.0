@@ -45,7 +45,7 @@ namespace AsukaBot_1._0.Classes
                     break;
 
                     //don't work because it can't access the right instance of the program
-                    /*
+
                 case "loadrpg":
                     try
                     {
@@ -58,7 +58,6 @@ namespace AsukaBot_1._0.Classes
                         Console.WriteLine("[ERORR] :" + ex);
                     }
                     break;
-                    */
 
                 default:
                     Console.WriteLine("command not recognised");
