@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -100,7 +98,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    builder.AddField("Inventory", "Empthy");
+                    builder.AddField("Inventory", "Empty");
                 }
                 builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
                 await ReplyAsync("", false, builder.Build());
@@ -128,6 +126,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             string temp = ConnectWords(new List<string> { para1, para2, para3, para4 });
             bool ItemExsists = false;
             string data = "";
+            EmbedBuilder builder = new EmbedBuilder();
             for (int i = 0; i < CheckUpList.GetAllItemsList().Count; i++)
             {
                 if (temp.ToLower() == CheckUpList.GetAllItemsList()[i].Getname().ToLower())
@@ -143,6 +142,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         if (CheckUpList.GetAllItemsList()[i] is WeaponsItem)
                         {
                             Weapon = (WeaponsItem)CheckUpList.GetAllItemsList()[i];
+                            builder.AddField("Item", Weapon.Getname());
+                            builder.AddField("Flavor text", Weapon.GetFlavorText());
+                            builder.AddField("Price", Weapon.GetPrice());
+                            builder.AddField("Damage", Weapon.GetDamge());
                             data = "Item: " + Weapon.Getname() + "\n" + "Flavor text: " + Weapon.GetFlavorText() + "\n" + "Damage: " + Weapon.GetDamge() + "\n" + "Physical damge type: " + Weapon.GetPhyDamgeType() + "\n" + "Value: " + Weapon.GetPrice() + "\n" + "Buyable: " + Weapon.GetBuyableState() + "\n" + "Quest item : " + Weapon.GetQuestState() + "\n" + "Crafting material(s): " + Weapon.GetCraftingMaterial() + "\n" + "Rarity: " + Weapon.GetRarity();
                         }
 
@@ -166,17 +169,17 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
                         }
                     }
-                    catch (Exception d)
+                    catch (Exception e)
                     {
-                        Console.WriteLine(d);
+                        Console.WriteLine(e);
                     }
-                    await Context.Channel.SendMessageAsync(data);
+                    await ReplyAsync("", false, builder.Build());
                 }
             }
 
             if (ItemExsists == false)
             {
-                await Context.Channel.SendMessageAsync("Item [" + temp + "] does not exists");
+                await ReplyAsync("Item [" + temp + "] does not exists");
             }
         }
 

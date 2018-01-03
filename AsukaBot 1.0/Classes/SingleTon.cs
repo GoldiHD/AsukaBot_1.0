@@ -1,6 +1,7 @@
 ﻿using AsukaBot_1._0.Module.RPG.Logic.Enemy;
 using System.Threading;
 using AsukaBot_1._0.Module.Music.Logic;
+using Discord.Audio;
 
 namespace AsukaBot_1._0.Classes
 {
@@ -50,5 +51,6 @@ namespace AsukaBot_1._0.Classes
                 RPGInstance = instance;
             }
         }
+
     }
 }
