@@ -127,17 +127,17 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
             }
         }
 
-        public string GetGold(Player user)
+        public string GetGold(Player user, int rate)
         {
             int GoldForKill = rng.Next(GoldDropMin, GoldDropMax + 1);
-            user.GetInventory().GiveGold(GoldForKill);
+            user.GetInventory().GiveGold(GoldForKill * rate);
             if (GoldForKill == 0)
             {
                 return "you didn't gain any gold";
             }
             else
             {
-                return "You gained " + GoldForKill + " gold";
+                return "You gained " + GoldForKill * rate + " gold";
             }
         }
 

@@ -179,8 +179,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             int DamgeAfterAc;
             int WeaponDamge;
             float DamgeModifyer;
-            WeaponDamge = questManager.GetCombatManager().GetEnemy().GetDamge();
-            DamgeModifyer = questManager.GetCombatManager().GetEnemy().GetCritchance();
+            WeaponDamge = questManager.GetStoryMaker().GetEnemy().GetDamge();
+            DamgeModifyer = questManager.GetStoryMaker().GetEnemy().GetCritchance();
             if (RNG.Next(1, 101) <= (DamgeModifyer * 100))
             {
                 DamgeAfterAc = (int)((WeaponDamge * 2) - (AC / (Level * 1.5f)));
@@ -194,7 +194,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 DamgeAfterAc = 0;
             }
-            questManager.GetCombatManager().GetEnemy().Attack(this, DamgeAfterAc);
+            questManager.GetStoryMaker().GetEnemy().Attack(this, DamgeAfterAc);
             return DamgeAfterAc.ToString();
         }
 
@@ -217,14 +217,14 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
                     DamgeModifyer = MyStats.GetPower().GetDamgeModify();
 
-                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetCombatManager().GetEnemy().DamgeModify());
-                    Console.WriteLine("AC: "+questManager.GetCombatManager().GetEnemy().DamgeModify());
+                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    Console.WriteLine("AC: "+questManager.GetStoryMaker().GetEnemy().DamgeModify());
                     Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;
                     }
-                    questManager.GetCombatManager().GetEnemy().DealDamge(DamgeAfterAc);
+                    questManager.GetStoryMaker().GetEnemy().DealDamge(DamgeAfterAc);
 
 
                     break;
