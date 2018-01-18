@@ -7,6 +7,7 @@ using AsukaBot_1._0.Module.RPG.Logic;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Classes;
+using System.Diagnostics;
 
 namespace AsukaBot_1._0.Module.Music.Logic
 {
@@ -1141,19 +1142,100 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_Mine")]
         public async Task Minning()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Mine");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Mine() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Iron")]);
+                    Builder.AddField("You mined: ", "Iron");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Mine() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Mine() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Mine() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
 
         [Command("_Chop")]
         public async Task ChopWood()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Chop");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Chop() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Regular wood")]);
+                    Builder.AddField("You chopped: ", " Regular wood");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Chop() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Chop() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Chop() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
 
         [Command("_Forage")]
         public async Task Forage()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Forage");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Forage() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Berries")]);
+                    Builder.AddField("You chopped: ", "Berries");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Forage() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Forage() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Forage() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
         #endregion
 

@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Module.RPG.Logic.Enemy;
+using System.Diagnostics;
+using AsukaBot_1._0.Module.RPG.Logic.Classes;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
     public class Player
     {
+        private ClassBase MyClass;
         private Random RNG = new Random();
         private QuestManager questManager;
         private PlayerStates MyPlayerState = PlayerStates.Rest;
@@ -28,8 +31,74 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private int StatPointsLvlCounter = 0;
         private int AC = 0;
         private bool HardcoreMode = false;
+        private Stopwatch MineSW = new Stopwatch();
+        private Stopwatch ChopSW = new Stopwatch();
+        private Stopwatch ForageSW = new Stopwatch();
 
         public Player() { }
+
+        public int Mine()
+        {
+            if (MineSW.IsRunning)
+            {
+                if (MineSW.ElapsedMilliseconds > 300000)
+                {
+                    MineSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)MineSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                MineSW.Start();
+                return 0;
+            }
+        }
+
+        public int Chop()
+        {
+            if (ChopSW.IsRunning)
+            {
+                if (ChopSW.ElapsedMilliseconds > 300000)
+                {
+                    ChopSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)ChopSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                ChopSW.Start();
+                return 0;
+            }
+        }
+
+        public int Forage()
+        {
+            if (ForageSW.IsRunning)
+            {
+                if(ForageSW.ElapsedMilliseconds > 300000)
+                {
+                    ForageSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)ForageSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                ForageSW.Start();
+                return 0;
+            }
+        }
 
         public void SetPlayerLevel(int lvl)
         {
@@ -218,7 +287,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     DamgeModifyer = MyStats.GetPower().GetDamgeModify();
 
                     DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
-                    Console.WriteLine("AC: "+questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    Console.WriteLine("AC: " + questManager.GetStoryMaker().GetEnemy().DamgeModify());
                     Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
                     if (DamgeAfterAc <= 0)
                     {
@@ -243,7 +312,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
             else
             {
-                return  DamgeAfterAc.ToString();
+                return DamgeAfterAc.ToString();
             }
         }
 

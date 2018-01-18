@@ -8,19 +8,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 {
     public class WeaponMagicEffect
     {
-        private Elements MyElement;
+        private ElementType MyElement;
 
         public int GetExtraDamage()
         {
             return 0;
         }
-    }
-
-
-
-    public enum Elements
-    {
-        Fire, Water, Earth, Thunder
     }
 }
 

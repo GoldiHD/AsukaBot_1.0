@@ -11,11 +11,13 @@ using Discord;
 using Discord.Audio;
 using AsukaBot_1._0.Classes;
 using AsukaBot_1._0.Module.Music;
+using System.IO;
 
 namespace AsukaBot_1._0.Core
 {
     class MyBot
     {
+        private string botToken;
         public static DiscordSocketClient client;
         private CommandService command;
         private IServiceProvider service;
@@ -23,20 +25,30 @@ namespace AsukaBot_1._0.Core
 
         public async Task Start()
         {
-            client = new DiscordSocketClient();
-            command = new CommandService();
-            Audio = new AudioService();
-            service = new ServiceCollection().AddSingleton(client).AddSingleton(command).AddSingleton(Audio).BuildServiceProvider();
-            
-            string botToken = "Mjg1Mzc2NDM1NTU0ODc3NDQx.C5RVig.DSje5ToZYsU7-8jh4HunqG8I4KY";
-            SingleTon.GetConsoleCheckerInstance().StartUp();
-            //event subcribsion
-            client.Log += Log;
-            client.UserJoined += AnnouceUserJoined;
-            await RegisterCommandAsync();
-            await client.LoginAsync(Discord.TokenType.Bot, botToken);
-            await client.StartAsync();
-            await Task.Delay(-1);
+            if (File.Exists(Directory.GetCurrentDirectory() + "//assets//credentials.txt"))
+            {
+
+                client = new DiscordSocketClient();
+                command = new CommandService();
+                Audio = new AudioService();
+                service = new ServiceCollection().AddSingleton(client).AddSingleton(command).AddSingleton(Audio).BuildServiceProvider();
+
+                botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
+                SingleTon.GetConsoleCheckerInstance().StartUp();
+                //event subcribsion
+                client.Log += Log;
+                client.UserJoined += AnnouceUserJoined;
+                await RegisterCommandAsync();
+                await client.LoginAsync(Discord.TokenType.Bot, botToken);
+                await client.StartAsync();
+                await Task.Delay(-1);
+            }
+            else
+            {
+                Console.WriteLine("no credentials could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt, so one have been created");
+                File.WriteAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt", "Discord token: ");
+                Console.ReadKey();
+            }
         }
 
         private async Task AnnouceUserJoined(SocketGuildUser user)

@@ -67,7 +67,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
                 #region Consumable
                 AllItems.Add(new Consumable("Lesser Potion of Healing", "it's a small potion that gives you health back", true, 10, 1, false, Rarity.common, ConsumableItem.Healing, new List<ItemType>() { ItemType.Consumable, ItemType.Heal }));
-
+                AllItems.Add(new Consumable("Berries", "SOome berries that restore some health", true, 1, 1, false, Rarity.common, ConsumableItem.Food, new List<ItemType> {ItemType.Food, ItemType.Consumable}));
                 #endregion
 
                 #endregion

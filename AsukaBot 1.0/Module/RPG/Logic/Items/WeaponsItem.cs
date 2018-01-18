@@ -94,6 +94,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
     {
         private int Damge;
         private PhyDamgeType DamgephyType;
+        private ElementType DamageElementalType;
         public Attack(int damge, PhyDamgeType damgephyType)
         {
             Damge = damge;

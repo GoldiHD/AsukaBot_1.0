@@ -47,9 +47,15 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 
     class Boss : EnemyBase
     {
-        public Boss(string name, int damgemax, int damgemin, int hp, int currenthp, int ac, int levelrangemin, int levelrangemax)
+        public Boss(string name, int damgemax, int damgemin, int hp, int ac, int levelrangemin, int levelrangemax, int xpgain, List<LootDrop> Loot, int MaxGoldDrop, int MinGoldDrop, int heavyattack)
         {
-
+            Name = name;
+            DamgeMax = damgemax;
+            DamgeMin = damgemin;
+            HP = hp;
+            CurrentHP = HP;
+            AC = ac;
+            XpGain = xpgain;
         }
     }
 

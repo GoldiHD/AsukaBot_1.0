@@ -167,6 +167,8 @@
     <Compile Include="Module\Music\AudioService.cs" />
     <Compile Include="Module\Music\Music.cs" />
     <Compile Include="Module\Music\SongInfo.cs" />
+    <Compile Include="Module\RPG\Logic\Classes\ClassBase.cs" />
+    <Compile Include="Module\RPG\Logic\Classes\MageClass.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\EnemyBase.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\MonsterDatabase.cs" />
     <Compile Include="Module\RPG\Logic\Inventory.cs" />
