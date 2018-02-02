@@ -50,17 +50,18 @@ namespace AsukaBot_1._0.Module.StandardCommands
         }
 
         [Command("purge")]
-        public async Task Purge(int amount = 0)
+        public async Task Purge(int amount = 1)
         {
-            IMessage[] messageToDelete;
+            
             try
             {
                 Console.WriteLine("Purge comited by " + Context.User.Mention + " wiped " + amount + " message(s)");
-                //messageToDelete = await Context.Channel.GetCachedMessages(amount);
+                var messageToDelete = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
+                await Context.Channel.DeleteMessagesAsync(messageToDelete);
             }
             catch
             {
-
+                await Context.Channel.SendMessageAsync("the message can't be over 2 weeks old or delete more then 99 messages");
             }
             await ReplyAsync("Purging");
         }
