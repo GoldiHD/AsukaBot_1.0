@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AsukaBot_1._0.Module.RPG.Logic
+﻿namespace AsukaBot_1._0.Module.RPG.Logic
 {
     public class Stats
     {
+
         private int SpendAbleStatPoints = 10;
         private Power MyPower;
         private Magic MyMagic;

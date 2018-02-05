@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Discord.Commands;
 using System.Reflection;
 using Discord;
-using Discord.Audio;
 using AsukaBot_1._0.Classes;
 using AsukaBot_1._0.Module.Music;
 using System.IO;

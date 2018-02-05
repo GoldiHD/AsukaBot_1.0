@@ -186,24 +186,17 @@ namespace AsukaBot_1._0.Module.StandardCommands
 
         }
 
+        [Command("come over kazuma")]
+        public async Task Kazuma()
+        {
+            EmbedBuilder build = new EmbedBuilder();
+            build.AddField("Kazuma", "desu").AddInlineField("Kazuma", "desu");
+            await ReplyAsync("", false, build.Build());
+        }
+
+
     }
 }
 
-//context
 
-
-//[Command("purge")]
-//public async Task Purge()
-//{
-//    EmbedBuilder builder = new EmbedBuilder();
-//    builder.WithTitle("Purge!!").WithDescription("Let the purge begin").WithColor(Color.Blue);
-//    await ReplyAsync("", false, builder.Build());
-
-//}
-//[Command("come over kazuma")]
-//public async Task Kazuma()
-//{
-//    EmbedBuilder build = new EmbedBuilder();
-//    build.AddField("Kazuma", "desu").AddInlineField("Kazuma", "desu");
-//    await ReplyAsync("", false, build.Build());
-//}      
+     

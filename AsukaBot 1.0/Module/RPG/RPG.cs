@@ -8,6 +8,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Classes;
 using System.Diagnostics;
+using AsukaBot_1._0.Module.RPG.Logic.Classes;
 
 namespace AsukaBot_1._0.Module.Music.Logic
 {
@@ -606,6 +607,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             else
             {
                 Stats Statsholder = AllPlayers[temp].GetStats();
+                builder.AddInlineField("Class", AllPlayers[temp].GetClass().GetClassName());
                 builder.AddInlineField("Power", Statsholder.GetPower().GetPowerLvl());
                 builder.AddInlineField("Magic", Statsholder.GetMagic().GetMagicLvl());
                 builder.AddInlineField("Dexterity", Statsholder.GetDexterity().GetDexterityLvl());
@@ -848,6 +850,57 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
             }
         }
+
+        [Command("_class")]
+        public async Task PickClass(string pickedclass)
+        {
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("you error have seemed to occurred, please try redoing your command");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetClass() is ClassLess)
+                {
+                    switch (pickedclass.ToLower())
+                    {
+                        case "warrior":
+                            AllPlayers[temp].SetClass(new ClassWarior());
+                            break;
+
+                        case "paladin":
+                            AllPlayers[temp].SetClass(new ClassRanger());
+                            break;
+
+                        case "rouge":
+                            AllPlayers[temp].SetClass(new ClassRouge());
+                            break;
+
+                        case "cleric":
+                            AllPlayers[temp].SetClass(new ClassCleric());
+                            break;
+
+                        case "ranger":
+                            AllPlayers[temp].SetClass(new ClassRanger());
+                            break;
+
+                        case "mage":
+                            AllPlayers[temp].SetClass(new ClassMage());
+                            break;
+
+                        default:
+                            await Context.Channel.SendMessageAsync("Invalid input");
+                            break;
+                    }
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync("You already have a class");
+                }
+            }
+        }
+
 
         #endregion
 
