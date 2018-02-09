@@ -8,76 +8,77 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Classes
 {
     public class ClassBase
     {
+        protected Player User;
         protected string Classname;
-        protected Stats PlayerStats;
-
-        public Stats GetStats()
-        {
-            return PlayerStats;
-        }
-
         public string GetClassName()
         {
             return Classname;
-        }
-
-        public void SetStats(Stats input)
-        {
-            PlayerStats = input;
         }
     }
 
     public class ClassMage : ClassBase
     {
-        public ClassMage()
+        public ClassMage(Player user)
         {
+            User = user;
             Classname = "Mage";
+            User.GetFeatSystem().ActivateFeat("Smart ass");
         }
     }
 
     public class ClassRanger : ClassBase
     {
-        public ClassRanger()
+        public ClassRanger(Player user)
         {
+            User = user;
             Classname = "Ranger";
+            User.GetFeatSystem().ActivateFeat("Nimble");
         }
     }
 
     public class ClassRouge : ClassBase
     {
-        public ClassRouge()
+        public ClassRouge(Player user)
         {
+            User = user;
             Classname = "Rouge";
+            User.GetFeatSystem().ActivateFeat("Uncanny Luck");
         }
     }
 
     public class ClassCleric : ClassBase
     {
-        public ClassCleric()
+        public ClassCleric(Player user)
         {
+            User = user;
             Classname = "Cleric";
+            User.GetFeatSystem().ActivateFeat("Inborn Magic");
         }
     }
 
     public class ClassWarior : ClassBase
     {
-        public ClassWarior()
+        public ClassWarior(Player user)
         {
+            User = user;
             Classname = "Warrior";
+            User.GetFeatSystem().ActivateFeat("Hard Hitter");
         }
     }
 
     public class ClassPaladin : ClassBase
     {
-        public ClassPaladin()
+        public ClassPaladin(Player user)
         {
+            User = user;
             Classname = "Paladin";
+            User.GetFeatSystem().ActivateFeat("Tanker");
         }
     }
 
     public class ClassLess : ClassBase
     {
-        public ClassLess(Player user)
+        public ClassLess()
         {
             Classname = "Classless";
         }
@@ -85,6 +86,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Classes
 
     public enum ClassesType
     {
-        Classless, Warrior, Paladin, Cleric, Rouge, Ranger, Mage
+        Classless, Warrior, Paladin, Cleric, Rouge, Ranger, Mages
     }
 }

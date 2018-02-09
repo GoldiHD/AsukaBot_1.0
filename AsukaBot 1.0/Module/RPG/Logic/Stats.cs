@@ -21,6 +21,16 @@
             MyLuck = myLuck;
         }
 
+        public Stats(Stats input)
+        {
+            MyPower = input.MyPower;
+            MyMagic = input.MyMagic;
+            MyDexterity = input.MyDexterity;
+            MyIntellegenc = input.MyIntellegenc;
+            MyVitallity = input.MyVitallity;
+            MyLuck = input.MyLuck;
+        }
+
         public Power GetPower()
         {
             return MyPower;
@@ -90,6 +100,16 @@
             return DamageIncrease;
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public bool IncreaseStatLvl(int newlvlpoints)
         {
             if (newlvlpoints > 0)
@@ -140,6 +160,16 @@
             }
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public int GetMana()
         {
             return Mana;
@@ -165,6 +195,16 @@
         public int GetDexterityLvl()
         {
             return Lvl;
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public bool IncreaseStatLvl(int newlvlpoints)
@@ -213,6 +253,16 @@
             {
                 return false;
             }
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public int GetIntellegencLvl()
@@ -270,6 +320,16 @@
             }
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public void GainFullHealth()
         {
             Health = MaxHealth;
@@ -307,6 +367,16 @@
             {
                 return false;
             }
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public int GetLuckLvl()

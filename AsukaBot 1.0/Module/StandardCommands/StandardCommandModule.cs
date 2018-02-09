@@ -52,19 +52,27 @@ namespace AsukaBot_1._0.Module.StandardCommands
         [Command("purge")]
         public async Task Purge(int amount = 1)
         {
-            
+
             try
             {
-                Console.WriteLine("Purge comited by " + Context.User.Mention + " wiped " + amount + " message(s)");
+                Console.WriteLine("Purge comited by " + Context.User.Username + ":" + Context.User.Mention + " wiped " + amount + " message(s)");
                 var messageToDelete = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
                 await Context.Channel.DeleteMessagesAsync(messageToDelete);
+                await Context.Channel.SendFileAsync(@"assets\sys\shutdownMessage.gif");
+                await ReplyAsync("Purging");
             }
             catch
             {
-                await Context.Channel.SendMessageAsync("the message can't be over 2 weeks old or delete more then 99 messages");
+                await ReplyAsync("the message can't be over 2 weeks old or delete more then 99 messages");
             }
-            await ReplyAsync("Purging");
         }
+
+        [Command("tacticalnuke")]
+        public async Task nuke(int amount = 1)
+        {
+            await Purge(amount);
+        }
+
 
         [Command("smug")]
         public async Task smug()
@@ -167,7 +175,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
         [Command("purge")]
         public async Task PerformPurge(int amount)
         {
-            IEnumerable<IMessage> messageToPurge= await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
+            IEnumerable<IMessage> messageToPurge = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
             try
             {
                 if (amount <= 100 || amount >= 0)
@@ -199,4 +207,3 @@ namespace AsukaBot_1._0.Module.StandardCommands
 }
 
 
-     

@@ -8,7 +8,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 {
     public class Player
     {
-        private ClassBase MyClass;
+        private Stats PlayerStats = new Stats(new Power(1), new Magic(1), new Dexterity(1), new Intellegenc(1), new Vitallity(1), new Luck(1));
+        private ClassBase MyClass = new ClassLess();
         private Random RNG = new Random();
         private QuestManager questManager;
         private PlayerStates MyPlayerState = PlayerStates.Rest;
@@ -28,11 +29,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private Stopwatch MineSW = new Stopwatch();
         private Stopwatch ChopSW = new Stopwatch();
         private Stopwatch ForageSW = new Stopwatch();
-        private StatsModifer FeatsSystem;
+        public StatsModifer FeatsSystem;
 
         public Player()
         {
-            FeatsSystem = new StatsModifer(this);
+           
         }
 
         public ClassBase GetClass()
@@ -42,9 +43,9 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public void SetClass(ClassBase PickedClass)
         {
-            MyClass = PickedClass;               
+            MyClass = PickedClass;
+                       
         }
-
         public int Mine()
         {
             if (MineSW.IsRunning)
@@ -124,6 +125,15 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             NextLvlExp = exp;
         }
 
+        public StatsModifer GetFeatSystem()
+        {
+            if(FeatsSystem == null)
+            {
+                FeatsSystem = new StatsModifer(this);
+            }
+            return FeatsSystem;
+        }
+
         public Player(string username)
         {
             Username = username;
@@ -138,7 +148,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public string GetGeneralStats()
         {
-            string data = "Username: " + Username + "\n" + "" + MyClass.GetStats().GetVitallity().GetMyHealth() + "/" + MyClass.GetStats().GetVitallity().GetMyMaxHealth() + "\n" + "Armor: " + AC + "\n" + "Lvl: " + Level + "\n" + "exp: " + expCurrent + "/" + NextLvlExp + "\n" + "Extra stats points: " + MyClass.GetStats().GetStatPoints();
+            string data = "Username: " + Username + "\n" + "" + PlayerStats.GetVitallity().GetMyHealth() + "/" + PlayerStats.GetVitallity().GetMyMaxHealth() + "\n" + "Armor: " + AC + "\n" + "Lvl: " + Level + "\n" + "exp: " + expCurrent + "/" + NextLvlExp + "\n" + "Extra stats points: " + PlayerStats.GetStatPoints();
             return data;
         }
 
@@ -181,12 +191,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 StatPointsLvlCounter++;
                 if (StatPointsLvlCounter == 5)
                 {
-                    MyClass.GetStats().AddStatsPoints(5);
+                    PlayerStats.AddStatsPoints(5);
                     StatPointsLvlCounter = 0;
                 }
                 else
                 {
-                    MyClass.GetStats().AddStatsPoints(2);
+                    PlayerStats.AddStatsPoints(2);
                 }
 
                 return true;
@@ -209,7 +219,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public void TakeDamage(int damage)
         {
-            MyClass.GetStats().GetVitallity().SetHealth(damage);
+            PlayerStats.GetVitallity().SetHealth(damage);
         }
 
         public void SetQuestManager(QuestManager quest)
@@ -229,12 +239,13 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public Stats GetStats()
         {
-            return MyClass.GetStats();
+            return PlayerStats;
         }
 
         public void SetStats(Stats NewStats)
         {
-            MyClass.SetStats(NewStats);
+            PlayerStats = new Stats(NewStats);
+            FeatsSystem = new StatsModifer(this);
         }
 
         public Inventory GetInventory()
@@ -293,11 +304,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                         weaponDamge = EquipedWeaponItem.GetDamge();
                     }
 
-                    DamgeModifyer = MyClass.GetStats().GetPower().GetDamgeModify();
+                    DamgeModifyer = PlayerStats.GetPower().GetDamgeModify();
 
                     DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
-                    Console.WriteLine("AC: " + questManager.GetStoryMaker().GetEnemy().DamgeModify());
-                    Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
+                    //Console.WriteLine("AC: " + questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    //Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;

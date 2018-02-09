@@ -866,27 +866,33 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     switch (pickedclass.ToLower())
                     {
                         case "warrior":
-                            AllPlayers[temp].SetClass(new ClassWarior());
+                            AllPlayers[temp].SetClass(new ClassWarior(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Warrior").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         case "paladin":
-                            AllPlayers[temp].SetClass(new ClassRanger());
+                            AllPlayers[temp].SetClass(new ClassRanger(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Paladin").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         case "rouge":
-                            AllPlayers[temp].SetClass(new ClassRouge());
+                            AllPlayers[temp].SetClass(new ClassRouge(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Rouge").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         case "cleric":
-                            AllPlayers[temp].SetClass(new ClassCleric());
+                            AllPlayers[temp].SetClass(new ClassCleric(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "cleric").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         case "ranger":
-                            AllPlayers[temp].SetClass(new ClassRanger());
+                            AllPlayers[temp].SetClass(new ClassRanger(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Ranger").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         case "mage":
-                            AllPlayers[temp].SetClass(new ClassMage());
+                            AllPlayers[temp].SetClass(new ClassMage(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Mage").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
                             break;
 
                         default:

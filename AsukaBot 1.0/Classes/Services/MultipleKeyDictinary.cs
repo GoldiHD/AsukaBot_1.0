@@ -24,6 +24,7 @@ namespace AsukaBot_1._0.Classes.Services
             Secondary.Add(subkey);
             Value.Add(value);
         }
+
         /// <summary>
         /// Check if the sizes of the dictionary fits
         /// </summary>
@@ -155,6 +156,9 @@ namespace AsukaBot_1._0.Classes.Services
             return ReturnList;
         }
 
+        /// <summary>
+        /// clear the dictionary of all data
+        /// </summary>
         public void Clear()
         {
             Primary.Clear();
@@ -162,6 +166,10 @@ namespace AsukaBot_1._0.Classes.Services
             Value.Clear();
         }
 
+        /// <summary>
+        /// remove data in posstion given
+        /// </summary>
+        /// <param name="Postion"></param>
         public void Remove(int Postion)
         {
             if(ErrorChecking())
@@ -176,6 +184,19 @@ namespace AsukaBot_1._0.Classes.Services
             }
         }
 
+        /// <summary>
+        /// Get all the values from the values part of the dictionary
+        /// </summary>
+        /// <returns></returns>
+        public List<TValue> GetAllValues()
+        {
+            return Value;
+        }
+
+        /// <summary>
+        /// invalid
+        /// </summary>
+        /// <param name="key"></param>
         public void RemoveAllByKey(TKey key)
         {
             List<int> RemoveLocations = new List<int>();
@@ -185,6 +206,9 @@ namespace AsukaBot_1._0.Classes.Services
             }
         }
 
+        /// <summary>
+        /// invalid
+        /// </summary>
         public void RemoveAllBySubkey()
         {
 
