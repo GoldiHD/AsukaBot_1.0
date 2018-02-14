@@ -144,6 +144,18 @@
             return Lvl;
         }
 
+        public  void SetMana(int newmana)
+        {
+            if(MaxMana < newmana)
+            {
+                Mana = MaxMana;
+            }
+            else
+            {
+                Mana = newmana;
+            }
+        }
+
         public bool IncreaseStatLvl(int newlvlpoints)
         {
             if (newlvlpoints > 0)

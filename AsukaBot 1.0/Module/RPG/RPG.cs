@@ -7,7 +7,6 @@ using AsukaBot_1._0.Module.RPG.Logic;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Classes;
-using System.Diagnostics;
 using AsukaBot_1._0.Module.RPG.Logic.Classes;
 
 namespace AsukaBot_1._0.Module.Music.Logic
@@ -394,7 +393,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             builder.AddField("Your Attack", AllPlayers[temp].Attack()).WithColor(Color.Red);
                             builder.AddField("Counter attack", AllPlayers[temp].CounterAttack());
                             builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
-                            builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles() > 0)
+                            {
+                                builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            }
 
                             if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() > 0)
                             {
@@ -403,14 +405,21 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             else
                             {
                                 builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", "0" + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
-                                AllPlayers[temp].GetQuestManager().GetStoryMaker().RemoveAndUpdateList();
+
                             }
 
                             if (AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() >= 1)
                             {
                                 if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() <= 0)
                                 {
-                                    builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP());
+                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2))
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2 + " level up");
+                                    }
+                                    else
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
+                                    }
                                     builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp]));
                                     try
                                     {
@@ -420,14 +429,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                     {
                                         Console.WriteLine(ex);
                                     }
-                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP()))
-                                    {
-                                        builder.AddField("Level up", "");
-                                    }
                                     AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
-                                    AllPlayers[temp].SetQuestManager(null);
                                     AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                    AllPlayers[temp].GetQuestManager().GetStoryMaker().RemoveAndUpdateList();
+                                    AllPlayers[temp].SetQuestManager(null);
                                 }
+
                             }
                             else
                             {
@@ -466,7 +473,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             {
                                 builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
                             }
-                            builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles() > 0)
+                            {
+                                builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            }
                             if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() > 0)
                             {
                                 builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
@@ -480,7 +490,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             {
                                 if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() <= 0)
                                 {
-                                    builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
+                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2))
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2 + " level up");
+                                    }
+                                    else
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
+                                    }
                                     builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp]));
                                     try
                                     {
@@ -490,17 +507,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                     {
                                         Console.WriteLine(ex);
                                     }
-                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2))
-                                    {
-                                        builder.AddField("Level up", "");
-                                    }
+
                                     AllPlayers[temp].GetQuestManager().GetStoryMaker().RemoveAndUpdateList();
                                     if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy() == null)
                                     {
+                                        builder.WithTitle("Dungeon complete");
                                         AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
                                         AllPlayers[temp].SetQuestManager(null);
                                         AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
-                                        builder.AddField("Dungeon complete", "");
                                     }
                                 }
                             }
@@ -537,6 +551,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         break;
                 }
                 builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+                if (builder.Fields.Count > 7)
+                {
+                    Console.WriteLine("Error inbound");
+                }
                 await ReplyAsync("", false, builder.Build());
             }
         }
@@ -565,6 +583,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_dungeon")]
         public async Task EnterDungeon()
         {
+
             EmbedBuilder builder = new EmbedBuilder();
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
@@ -584,7 +603,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    await Context.Channel.SendMessageAsync("you need to be out of an adventure to enter another");
+                    await ReplyAsync("you need to be out of an adventure to enter another");
                 }
             }
         }

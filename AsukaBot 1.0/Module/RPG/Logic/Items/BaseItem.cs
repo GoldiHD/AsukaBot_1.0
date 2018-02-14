@@ -85,11 +85,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     public enum ItemType
     {
-        Weapon, Magic, Craftingitem, Armor, Consumable, Iron, Steel, Dragon, Leather, Light, Medium, Heavy, Head, Legs, Hands, Chest, Wood, Metal, Demon, Slash, Blunt, Punture, Heal, Buff, Food, Default
+        Weapon, Magic, Craftingitem, Mana, Armor, Consumable, Iron, Steel, Dragon, Leather, Light, Medium, Heavy, Head, Legs, Hands, Chest, Wood, Metal, Demon, Slash, Blunt, Punture, Heal, Buff, Food, Default
     }
 
     public enum Rarity
     {
-        common, uncommon, rare, legendary, mythicc, hentai
+        common, uncommon, rare, legendary, mythicc, hentai, epic
     }
 }

@@ -66,8 +66,17 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 #endregion
 
                 #region Consumable
-                AllItems.Add(new Consumable("Lesser Potion of Healing", "it's a small potion that gives you health back", true, 10, 1, false, Rarity.common, ConsumableItem.Healing, new List<ItemType>() { ItemType.Consumable, ItemType.Heal }));
-                AllItems.Add(new Consumable("Berries", "SOome berries that restore some health", true, 1, 1, false, Rarity.common, ConsumableItem.Food, new List<ItemType> {ItemType.Food, ItemType.Consumable}));
+                AllItems.Add(new Consumable("Lesser Potion of Healing", "it's a small potion that gives you health back", true, 1, 2, false, Rarity.uncommon, ConsumableItem.Healing, new List<ItemType>() { ItemType.Consumable, ItemType.Heal }));
+                AllItems.Add(new Consumable("Berries", "SOome berries that restore some health", true, 1, 1, false, Rarity.common, ConsumableItem.Food, new List<ItemType> { ItemType.Food, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Lesser Potion of Mana", "small potion that regains a tiny bit of mana", true, 1,2, false, Rarity.uncommon, ConsumableItem.Mana,new List<ItemType> { ItemType.Mana, ItemType.Magic, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Potion of Healing", "Medium size potion used for regainning health", true,1,4, false, Rarity.rare, ConsumableItem.Healing, new List<ItemType> { ItemType.Heal, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Potion of Mana", "Medium size potion used to regain mana", true, 1, 4, false, Rarity.rare, ConsumableItem.Mana, new List<ItemType> { ItemType.Mana, ItemType.Magic, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Potent Potion of Healing", "A large potion used for healing", true, 1, 6, false, Rarity.epic, ConsumableItem.Healing, new List<ItemType> { ItemType.Heal, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Potent Potion of Mana", "A large potion used to regai mana", true, 1, 6, false, Rarity.epic, ConsumableItem.Mana, new List<ItemType> { ItemType.Mana, ItemType.Magic, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Greater Potion of Healing", "A huge potion used for healing", true, 1, 8, false, Rarity.legendary, ConsumableItem.Healing, new List<ItemType> { ItemType.Heal, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Greater Potion of Mana", "A huge potion used for mana regain", true, 1, 8, false, Rarity.legendary, ConsumableItem.Mana, new List<ItemType> { ItemType.Mana, ItemType.Magic, ItemType.Consumable}));
+                AllItems.Add(new Consumable("Lewd Potion of Healing", "Mythic tier healing potion, stronger then anything ever", false, 1, 10, false, Rarity.mythicc, ConsumableItem.Healing, new List<ItemType> {  ItemType.Heal, ItemType.Consumable }));
+                AllItems.Add(new Consumable("Lewd Potion of Mana", "Mythic tier mana potion stronger then anything else before it", false, 1, 10, false, Rarity.mythicc, ConsumableItem.Mana, new List<ItemType> { ItemType.Mana, ItemType.Magic, ItemType.Consumable }));
                 #endregion
 
                 #endregion

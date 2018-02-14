@@ -20,7 +20,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
             switch (User.GetPlayerState())
             {
                 case PlayerStates.Encounter:
-                    story = new StoryMaker(1,0,User.GetPlayerLvl());
+                    story = new StoryMaker(1, 0, User.GetPlayerLvl());
                     break;
 
                 case PlayerStates.Campaign:
@@ -72,28 +72,26 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
 
         public NormalEnemy GetEnemy()
         {
-            if(CurrentEnemy == null)
+            if (CurrentEnemy == null)
             {
-                if (EnemyList.Count == 0)
-                {
-                    return null;
-                }
-                else
+                if (EnemyList.Count > 0)
                 {
                     CurrentEnemy = EnemyList[0];
-                    return CurrentEnemy;
+                    EnemyList.RemoveAt(0);
                 }
             }
-            else
-            {
-                return CurrentEnemy;
-            }
+            return CurrentEnemy;
+
         }
 
         public void RemoveAndUpdateList()
         {
             CurrentEnemy = null;
-            EnemyList.RemoveAt(0);
+            if (EnemyList.Count > 0)
+            {
+                CurrentEnemy = EnemyList[0];
+                EnemyList.RemoveAt(0);
+            }
         }
     }
 }

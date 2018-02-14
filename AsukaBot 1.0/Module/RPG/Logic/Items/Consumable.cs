@@ -40,6 +40,10 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
                 case ConsumableItem.Defense:
                     MyEffect = new Defense(ItemStrength);
                     break;
+
+                case ConsumableItem.Mana:
+                    MyEffect = new ManaPotion(ItemStrength);
+                    break;
             }
         }
 
@@ -128,12 +132,24 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     public class ManaPotion : Effect
     {
+        private int ManaRegain;
 
+        public ManaPotion(int strenght)
+        {
+            Strenght = strenght;
+            ManaRegain = Strenght * 10;
+        }
+
+        public override string UseAblility(Player user)
+        {
+            user.GetStats().GetMagic().SetMana(user.GetStats().GetMagic().GetMana() + ManaRegain);
+            return user.GetPlayername() + "'s mana is now" + user.GetStats().GetMagic().GetMana() + "/" + user.GetStats().GetMagic().GetMaxMana();
+        }
     }
 
     public enum ConsumableItem
     {
-        Healing, Boost, Food, Defense
+        Healing, Boost, Food, Defense, Mana, Attack
 
     }
 }

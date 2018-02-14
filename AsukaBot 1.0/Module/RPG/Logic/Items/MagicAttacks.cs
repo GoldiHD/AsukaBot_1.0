@@ -29,12 +29,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             MagicLvlReqiurement = magiclvlrequrements;
         }
 
-        /*
+
         public Attack attack()
         {
             return new Attack();
         }
-        */
+        
     }
 
     public enum SpellTier

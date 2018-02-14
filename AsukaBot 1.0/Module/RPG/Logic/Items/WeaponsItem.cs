@@ -101,6 +101,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             DamgephyType = damgephyType;
         }
 
+        public Attack()
+        {
+
+        }
+
         public int GetDamge()
         {
             return Damge;
