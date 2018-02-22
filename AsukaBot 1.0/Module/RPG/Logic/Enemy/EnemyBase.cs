@@ -44,7 +44,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 
 
     }
-
     class Boss : EnemyBase
     {
         public Boss(string name, int damgemax, int damgemin, int hp, int ac, int levelrangemin, int levelrangemax, int xpgain, List<LootDrop> Loot, int MaxGoldDrop, int MinGoldDrop, int heavyattack)
@@ -264,6 +263,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
         {
             return (AC + Lvl)/100;
         }
+
         public BaseItem GetDropChance()
         {
             if (Loot.Count() == 0 || Loot == null)

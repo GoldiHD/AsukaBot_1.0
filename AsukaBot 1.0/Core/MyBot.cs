@@ -21,6 +21,7 @@ namespace AsukaBot_1._0.Core
 
         public async Task Start()
         {
+            Console.WriteLine("Created by Lars H M/Goldi");
             if (File.Exists(Directory.GetCurrentDirectory() + "//assets//credentials.txt"))
             {
 

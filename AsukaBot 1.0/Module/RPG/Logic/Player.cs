@@ -287,11 +287,21 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return DamgeAfterAc.ToString();
         }
 
+        public string GetUsername()
+        {
+            return Username;
+        }
+
         public string Attack()
         {
+            int Chance;
+            Attack Myattack;
             int DamgeAfterAc = 0;
-            int weaponDamge;
+            int weaponDamge = 0;
+            MagicDamgeType MyMagicType;
+            PhyDamgeType MyPhyDamageType;
             float DamgeModifyer;
+            bool ExtraAttack = false;
             switch (MyAttackType)
             {
                 case AttackType.Melee:
@@ -301,14 +311,57 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     }
                     else
                     {
-                        weaponDamge = EquipedWeaponItem.GetDamge();
-                    }
+                        Myattack = EquipedWeaponItem.attack();
+                        weaponDamge = Myattack.GetDamge();
+                        switch(Myattack.GetDamgeTypePhy())
+                        {
+                            case PhyDamgeType.None:
 
+                                break;
+
+                            case PhyDamgeType.Blunt:
+
+                                break;
+
+                            case PhyDamgeType.Punture:
+
+                                break;
+
+                            case PhyDamgeType.Slash:
+
+                                break; 
+                        }
+
+                        switch(Myattack.GetElementalDamageType())
+                        {
+                            case MagicDamgeType.None:
+
+                                break;
+
+                            case MagicDamgeType.Earth:
+
+                                break;
+
+                            case MagicDamgeType.Water:
+
+                                break;
+
+                            case MagicDamgeType.Wind:
+                                Chance = RNG.Next(0, 100);
+                                if(Chance < 26)
+                                {
+                                    ExtraAttack = true;
+                                }
+                                break;
+
+                            case MagicDamgeType.Fire:
+                                weaponDamge += (int)(weaponDamge * 0.5f);
+                                break;
+                        }
+                    }
                     DamgeModifyer = PlayerStats.GetPower().GetDamgeModify();
 
                     DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
-                    //Console.WriteLine("AC: " + questManager.GetStoryMaker().GetEnemy().DamgeModify());
-                    //Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;
@@ -323,6 +376,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     {
                         weaponDamge = BareHandedDamge;
                     }
+                    else
+                    {
+                        EquipedMagicAttack.GetDamage();
+                    }
+
+                    DamgeModifyer = PlayerStats.GetIntellegence().GetDamgeModify();
+                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    if(DamgeAfterAc <= 0)
+                    {
+                        DamgeAfterAc = 0;
+                    }
+                    questManager.GetStoryMaker().GetEnemy().DealDamge(DamgeAfterAc);
                     break;
             }
 
@@ -341,10 +406,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             if (TheWeapon is WeaponsItem)
             {
                 EquipedWeaponItem = (WeaponsItem)TheWeapon;
+                EquipedMagicAttack = null;
             }
             else if (TheWeapon is MagicAttacks)
             {
                 EquipedMagicAttack = (MagicAttacks)TheWeapon;
+                EquipedWeaponItem = null;
             }
             else
             {

@@ -213,7 +213,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     {
                         if (AllPlayers[user].GetInventory().DoesTimeExistsInInventory(temp))
                         {
-                            if (AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is WeaponsItem)
+                            if (AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is WeaponsItem || AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is MagicAttacks)
                             {
                                 AllPlayers[user].AssignWeapon(AllPlayers[user].GetInventory().GetinventoryItemByName(temp));
                                 await Context.Channel.SendMessageAsync(temp + " have been equipped");
@@ -337,6 +337,93 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     await Context.Channel.SendMessageAsync("you need to be out of an adventure to enter another");
                 }
             }
+        }
+
+        [Command("_dungeon")]
+        public async Task EnterDungeon()
+        {
+
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
+                {
+                    builder.WithTitle("Dungeon").WithDescription(Context.User.Username).WithColor(Color.Blue);
+                    AllPlayers[temp].SetPlayerStates(PlayerStates.Dungeon);
+                    AllPlayers[temp].SetQuestManager(new QuestManager());
+                    AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], AllPlayers[temp].GetPlayerState());
+                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName());
+                    await ReplyAsync("", false, builder.Build());
+                }
+                else
+                {
+                    await ReplyAsync("you need to be out of an adventure to enter another");
+                }
+            }
+        }
+
+        [Command("_pvp")]
+
+        public async Task EnterPvp(string username)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
+                {
+                    builder.WithTitle("Pvp").WithDescription(Context.User.Username).WithColor(Color.Blue);
+                    bool UserExists = false;
+                    Player defender = null;
+                    foreach (Player element in AllPlayers)
+                    {
+                        if (element.GetUsername() == username)
+                        {
+                            defender = element;
+                            UserExists = true;
+                        }
+                    }
+
+                    if (UserExists)
+                    {
+                        if (defender.GetPlayerState() == PlayerStates.Rest)
+                        {
+                            //##############################Create request with timer######################################
+                            AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
+                            AllPlayers[temp].SetQuestManager(new QuestManager());
+                            builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
+                        }
+                        else
+                        {
+                            builder.AddField("[Error]", "Player is busy and can't fight with you");
+                        }
+                    }
+                    else
+                    {
+                        builder.AddField("[Error]", "Player: " + username + " doesn't exist");
+                    }
+                }
+                else
+                {
+                    builder.AddField("[Error]", "you need to be out of an adventure to enter another");
+                }
+                await ReplyAsync("[Error]", false, builder.Build());
+            }
+        }
+
+        [Command("_accept")]
+        public async Task AcceptChallenege()
+        {
+
         }
 
         [Command("_escape")]
@@ -580,33 +667,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("_dungeon")]
-        public async Task EnterDungeon()
-        {
 
-            EmbedBuilder builder = new EmbedBuilder();
-            int temp = DoIExist(Context.User.Username);
-            if (temp == -1)
-            {
-                await Context.Channel.SendMessageAsync("Error, please try again");
-            }
-            else
-            {
-                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
-                {
-                    builder.WithTitle("Dungeon").WithDescription(Context.User.Username).WithColor(Color.Blue);
-                    AllPlayers[temp].SetPlayerStates(PlayerStates.Dungeon);
-                    AllPlayers[temp].SetQuestManager(new QuestManager());
-                    AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], AllPlayers[temp].GetPlayerState());
-                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName());
-                    await ReplyAsync("", false, builder.Build());
-                }
-                else
-                {
-                    await ReplyAsync("you need to be out of an adventure to enter another");
-                }
-            }
-        }
 
         #endregion
 

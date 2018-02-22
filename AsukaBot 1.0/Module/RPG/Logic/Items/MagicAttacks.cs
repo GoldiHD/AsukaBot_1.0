@@ -9,11 +9,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
     public class MagicAttacks : BaseItem
     {
         private int Damage;
-        private ElementType AttackType;
+        private MagicDamgeType AttackType;
         private SpellTier SpellLvl;
         private int MagicLvlReqiurement;
 
-        public MagicAttacks(string name, string spelldescribe, int damage, ElementType attackType, SpellTier spellLvl, int magiclvlrequrements, int price, bool buyable, List<ItemType> itemTags, int itemvalue, bool questitem, Rarity rare)
+        public MagicAttacks(string name, string spelldescribe, int damage, MagicDamgeType attackType, SpellTier spellLvl, int magiclvlrequrements, int price, bool buyable, List<ItemType> itemTags, int itemvalue, bool questitem, Rarity rare)
         {
             Name = name;
             ItemDescribe = spelldescribe;
@@ -34,16 +34,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
         {
             return new Attack();
         }
+
+        public int GetDamage()
+        {
+            return Damage;
+        }
         
     }
 
     public enum SpellTier
     {
         I, II, III, IV, V, VI, VII, VIII, IX, X
-    }
-
-    public enum ElementType
-    {
-        Water, Thunder, Fire, Earth, Light, Dark
     }
 }

@@ -242,6 +242,7 @@
 
     public class Intellegenc
     {
+        private float DamageIncrease;
         private int Lvl;
         private int Tier; /* 10 points equals another tier so 10 = 1  20 = 2 and so on*/
         private float MagicResistance;
@@ -250,6 +251,8 @@
             Lvl = lvl;
             Tier = Lvl;
             MagicResistance = Lvl * 0.2f;
+            DamageIncrease = lvl * 0.2f;
+            
         }
 
         public bool IncreaseStatLvl(int newlvlpoints)
@@ -257,7 +260,7 @@
             if (newlvlpoints > 0)
             {
                 Lvl += newlvlpoints;
-                Tier = Lvl;
+                Tier = (int)Lvl / 2;
                 MagicResistance = Lvl * 0.2f;
                 return true;
             }
@@ -265,6 +268,11 @@
             {
                 return false;
             }
+        }
+
+        public float GetDamgeModify()
+        {
+            return DamageIncrease;
         }
 
         public void IncreaseStatsFeat(int newlvlinput)

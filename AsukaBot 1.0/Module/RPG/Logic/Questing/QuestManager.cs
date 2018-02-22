@@ -12,7 +12,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
     {
         private StoryMaker story;
         private Player User;
-        public void StartAdventure(Player player, PlayerStates state)
+        public void StartAdventure(Player player, PlayerStates state, Player Defender = null)
         {
             User = player;
             User.SetPlayerStates(state);
@@ -36,7 +36,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
                     break;
 
                 case PlayerStates.Pvp:
-
+                    story = new StoryMaker(player, Defender);
                     break;
 
                 case PlayerStates.Rest:
@@ -63,6 +63,10 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
             {
                 EnemyList.Add(MyMonsterDatabase.GetEnemyAroundLvl(playerlvl));
             }
+        }
+        public StoryMaker(Player Attacker, Player Defender)
+        {
+
         }
 
         public int GetBattles()
