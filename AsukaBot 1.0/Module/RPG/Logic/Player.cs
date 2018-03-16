@@ -29,6 +29,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private Stopwatch MineSW = new Stopwatch();
         private Stopwatch ChopSW = new Stopwatch();
         private Stopwatch ForageSW = new Stopwatch();
+        private Stopwatch PvpRequest = new Stopwatch();
         public StatsModifer FeatsSystem;
 
         public Player()
@@ -46,6 +47,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             MyClass = PickedClass;
                        
         }
+
+        public void PlayerRequestTimer()
+        {
+            if(PvpRequest.IsRunning)
+            {
+                if(PvpRequest.ElapsedMilliseconds > 300000)
+                {
+                    PvpRequest.Reset();
+                }
+            }
+        }
+
         public int Mine()
         {
             if (MineSW.IsRunning)

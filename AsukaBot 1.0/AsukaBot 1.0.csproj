@@ -182,6 +182,7 @@
     <Compile Include="Module\RPG\Logic\Player.cs" />
     <Compile Include="Module\RPG\Logic\Questing\Encounter.cs" />
     <Compile Include="Module\RPG\Logic\Questing\QuestManager.cs" />
+    <Compile Include="Classes\RPGThreadChecker.cs" />
     <Compile Include="Module\RPG\Logic\Stats.cs" />
     <Compile Include="Module\RPG\Logic\StatsModifer.cs" />
     <Compile Include="Module\RPG\RPG.cs" />

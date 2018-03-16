@@ -32,6 +32,7 @@ namespace AsukaBot_1._0.Core
 
                 botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
                 SingleTon.GetConsoleCheckerInstance().StartUp();
+                SingleTon.GetRPGThread().StartUp();
                 //event subcribsion
                 client.Log += Log;
                 client.UserJoined += AnnouceUserJoined;

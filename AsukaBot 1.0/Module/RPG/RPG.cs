@@ -368,7 +368,6 @@ namespace AsukaBot_1._0.Module.Music.Logic
         }
 
         [Command("_pvp")]
-
         public async Task EnterPvp(string username)
         {
             EmbedBuilder builder = new EmbedBuilder();
@@ -397,9 +396,9 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     {
                         if (defender.GetPlayerState() == PlayerStates.Rest)
                         {
-                            //##############################Create request with timer######################################
                             AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
                             AllPlayers[temp].SetQuestManager(new QuestManager());
+                            AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp],PlayerStates.Pvp, defender);
                             builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
                         }
                         else
@@ -421,9 +420,41 @@ namespace AsukaBot_1._0.Module.Music.Logic
         }
 
         [Command("_accept")]
-        public async Task AcceptChallenege()
+        public async Task AcceptChallenege(string username = null)
         {
-
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                EmbedBuilder builder = new EmbedBuilder();
+                if (AllPlayers[temp].GetPlayerState() != PlayerStates.Rest)
+                {
+                    if (username == null)
+                    {
+                        builder.AddField("[Error]", "Player doesn't exist");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < AllPlayers.Count; i++)
+                        {
+                            if (AllPlayers[i].GetPlayername().ToLower() == username.ToLower())
+                            {
+                                for (int x = 0; x < AllPlayers[0].GetQuestManager().GetPlayerListRequest().Count; x++)
+                                {
+                                    if (AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].GetAttacker().GetUsername() == username)
+                                    {
+                                        AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].acceptRequest();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                builder.AddField("[ERROR]", "You're too busy to accept the request right now");
+            }
         }
 
         [Command("_escape")]
@@ -1388,7 +1419,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             if (AllPlayers == null)
             {
                 AllPlayers = new List<Player>();
-                AllPlayers.Add(new Player(username));
+                //AllPlayers.Add(new Player(username));
                 return -1;
             }
             else
