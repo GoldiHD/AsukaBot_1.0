@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
-using AsukaBot_1._0.Module.RPG.Logic.Enemy;
+using System.Diagnostics;
+using AsukaBot_1._0.Module.RPG.Logic.Classes;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
     public class Player
     {
+        private Stats PlayerStats = new Stats(new Power(1), new Magic(1), new Dexterity(1), new Intellegenc(1), new Vitallity(1), new Luck(1));
+        private ClassBase MyClass = new ClassLess();
         private Random RNG = new Random();
         private QuestManager questManager;
         private PlayerStates MyPlayerState = PlayerStates.Rest;
         private string Username;
         private Inventory MyInventory = new Inventory();
-        private Stats MyStats = new Stats(new Power(1), new Magic(1), new Dexterity(1), new Intellegenc(1), new Vitallity(1), new Luck(1));
         private int Level = 1;
         private int expCurrent = 0;
         private int NextLvlExp = 10;
@@ -28,8 +26,102 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private int StatPointsLvlCounter = 0;
         private int AC = 0;
         private bool HardcoreMode = false;
+        private Stopwatch MineSW = new Stopwatch();
+        private Stopwatch ChopSW = new Stopwatch();
+        private Stopwatch ForageSW = new Stopwatch();
+        private Stopwatch PvpRequest = new Stopwatch();
+        public StatsModifer FeatsSystem;
 
-        public Player() { }
+        public Player()
+        {
+           
+        }
+
+        public ClassBase GetClass()
+        {
+            return MyClass;
+        }
+
+        public void SetClass(ClassBase PickedClass)
+        {
+            MyClass = PickedClass;
+                       
+        }
+
+        public void PlayerRequestTimer()
+        {
+            if(PvpRequest.IsRunning)
+            {
+                if(PvpRequest.ElapsedMilliseconds > 300000)
+                {
+                    PvpRequest.Reset();
+                }
+            }
+        }
+
+        public int Mine()
+        {
+            if (MineSW.IsRunning)
+            {
+
+                if (MineSW.ElapsedMilliseconds > 300000)
+                {
+                    MineSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)MineSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                MineSW.Start();
+                return 0;
+            }
+        }
+
+        public int Chop()
+        {
+            if (ChopSW.IsRunning)
+            {
+                if (ChopSW.ElapsedMilliseconds > 300000)
+                {
+                    ChopSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)ChopSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                ChopSW.Start();
+                return 0;
+            }
+        }
+
+        public int Forage()
+        {
+            if (ForageSW.IsRunning)
+            {
+                if(ForageSW.ElapsedMilliseconds > 300000)
+                {
+                    ForageSW.Reset();
+                    return 0;
+                }
+                else
+                {
+                    return (int)ForageSW.ElapsedMilliseconds;
+                }
+            }
+            else
+            {
+                ForageSW.Start();
+                return 0;
+            }
+        }
 
         public void SetPlayerLevel(int lvl)
         {
@@ -46,6 +138,15 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             NextLvlExp = exp;
         }
 
+        public StatsModifer GetFeatSystem()
+        {
+            if(FeatsSystem == null)
+            {
+                FeatsSystem = new StatsModifer(this);
+            }
+            return FeatsSystem;
+        }
+
         public Player(string username)
         {
             Username = username;
@@ -60,7 +161,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public string GetGeneralStats()
         {
-            string data = "Username: " + Username + "\n" + "" + MyStats.GetVitallity().GetMyHealth() + "/" + MyStats.GetVitallity().GetMyMaxHealth() + "\n" + "Armor: " + AC + "\n" + "Lvl: " + Level + "\n" + "exp: " + expCurrent + "/" + NextLvlExp + "\n" + "Extra stats points: " + MyStats.GetStatPoints();
+            string data = "Username: " + Username + "\n" + "" + PlayerStats.GetVitallity().GetMyHealth() + "/" + PlayerStats.GetVitallity().GetMyMaxHealth() + "\n" + "Armor: " + AC + "\n" + "Lvl: " + Level + "\n" + "exp: " + expCurrent + "/" + NextLvlExp + "\n" + "Extra stats points: " + PlayerStats.GetStatPoints();
             return data;
         }
 
@@ -103,12 +204,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 StatPointsLvlCounter++;
                 if (StatPointsLvlCounter == 5)
                 {
-                    MyStats.AddStatsPoints(5);
+                    PlayerStats.AddStatsPoints(5);
                     StatPointsLvlCounter = 0;
                 }
                 else
                 {
-                    MyStats.AddStatsPoints(2);
+                    PlayerStats.AddStatsPoints(2);
                 }
 
                 return true;
@@ -131,7 +232,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public void TakeDamage(int damage)
         {
-            MyStats.GetVitallity().SetHealth(damage);
+            PlayerStats.GetVitallity().SetHealth(damage);
         }
 
         public void SetQuestManager(QuestManager quest)
@@ -151,12 +252,13 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public Stats GetStats()
         {
-            return MyStats;
+            return PlayerStats;
         }
 
         public void SetStats(Stats NewStats)
         {
-            MyStats = NewStats;
+            PlayerStats = new Stats(NewStats);
+            FeatsSystem = new StatsModifer(this);
         }
 
         public Inventory GetInventory()
@@ -179,8 +281,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             int DamgeAfterAc;
             int WeaponDamge;
             float DamgeModifyer;
-            WeaponDamge = questManager.GetCombatManager().GetEnemy().GetDamge();
-            DamgeModifyer = questManager.GetCombatManager().GetEnemy().GetCritchance();
+            WeaponDamge = questManager.GetStoryMaker().GetEnemy().GetDamge();
+            DamgeModifyer = questManager.GetStoryMaker().GetEnemy().GetCritchance();
             if (RNG.Next(1, 101) <= (DamgeModifyer * 100))
             {
                 DamgeAfterAc = (int)((WeaponDamge * 2) - (AC / (Level * 1.5f)));
@@ -194,15 +296,25 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 DamgeAfterAc = 0;
             }
-            questManager.GetCombatManager().GetEnemy().Attack(this, DamgeAfterAc);
+            questManager.GetStoryMaker().GetEnemy().Attack(this, DamgeAfterAc);
             return DamgeAfterAc.ToString();
+        }
+
+        public string GetUsername()
+        {
+            return Username;
         }
 
         public string Attack()
         {
+            int Chance;
+            Attack Myattack;
             int DamgeAfterAc = 0;
-            int weaponDamge;
+            int weaponDamge = 0;
+            MagicDamgeType MyMagicType;
+            PhyDamgeType MyPhyDamageType;
             float DamgeModifyer;
+            bool ExtraAttack = false;
             switch (MyAttackType)
             {
                 case AttackType.Melee:
@@ -212,19 +324,62 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     }
                     else
                     {
-                        weaponDamge = EquipedWeaponItem.GetDamge();
+                        Myattack = EquipedWeaponItem.attack();
+                        weaponDamge = Myattack.GetDamge();
+                        switch(Myattack.GetDamgeTypePhy())
+                        {
+                            case PhyDamgeType.None:
+
+                                break;
+
+                            case PhyDamgeType.Blunt:
+
+                                break;
+
+                            case PhyDamgeType.Punture:
+
+                                break;
+
+                            case PhyDamgeType.Slash:
+
+                                break; 
+                        }
+
+                        switch(Myattack.GetElementalDamageType())
+                        {
+                            case MagicDamgeType.None:
+
+                                break;
+
+                            case MagicDamgeType.Earth:
+
+                                break;
+
+                            case MagicDamgeType.Water:
+
+                                break;
+
+                            case MagicDamgeType.Wind:
+                                Chance = RNG.Next(0, 100);
+                                if(Chance < 26)
+                                {
+                                    ExtraAttack = true;
+                                }
+                                break;
+
+                            case MagicDamgeType.Fire:
+                                weaponDamge += (int)(weaponDamge * 0.5f);
+                                break;
+                        }
                     }
+                    DamgeModifyer = PlayerStats.GetPower().GetDamgeModify();
 
-                    DamgeModifyer = MyStats.GetPower().GetDamgeModify();
-
-                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetCombatManager().GetEnemy().DamgeModify());
-                    Console.WriteLine("AC: "+questManager.GetCombatManager().GetEnemy().DamgeModify());
-                    Console.WriteLine("Damage: " + weaponDamge + (weaponDamge * (1 + DamgeModifyer)));
+                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;
                     }
-                    questManager.GetCombatManager().GetEnemy().DealDamge(DamgeAfterAc);
+                    questManager.GetStoryMaker().GetEnemy().DealDamge(DamgeAfterAc);
 
 
                     break;
@@ -234,6 +389,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     {
                         weaponDamge = BareHandedDamge;
                     }
+                    else
+                    {
+                        EquipedMagicAttack.GetDamage();
+                    }
+
+                    DamgeModifyer = PlayerStats.GetIntellegence().GetDamgeModify();
+                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    if(DamgeAfterAc <= 0)
+                    {
+                        DamgeAfterAc = 0;
+                    }
+                    questManager.GetStoryMaker().GetEnemy().DealDamge(DamgeAfterAc);
                     break;
             }
 
@@ -243,7 +410,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
             else
             {
-                return  DamgeAfterAc.ToString();
+                return DamgeAfterAc.ToString();
             }
         }
 
@@ -252,10 +419,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             if (TheWeapon is WeaponsItem)
             {
                 EquipedWeaponItem = (WeaponsItem)TheWeapon;
+                EquipedMagicAttack = null;
             }
             else if (TheWeapon is MagicAttacks)
             {
                 EquipedMagicAttack = (MagicAttacks)TheWeapon;
+                EquipedWeaponItem = null;
             }
             else
             {

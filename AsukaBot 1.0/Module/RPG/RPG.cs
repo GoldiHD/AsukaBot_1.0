@@ -7,6 +7,7 @@ using AsukaBot_1._0.Module.RPG.Logic;
 using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Classes;
+using AsukaBot_1._0.Module.RPG.Logic.Classes;
 
 namespace AsukaBot_1._0.Module.Music.Logic
 {
@@ -24,7 +25,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
         public void AddPlayer(Player LoadedUser)
         {
-            if(AllPlayers == null)
+            if (AllPlayers == null)
             {
                 AllPlayers = new List<Player>();
             }
@@ -212,7 +213,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     {
                         if (AllPlayers[user].GetInventory().DoesTimeExistsInInventory(temp))
                         {
-                            if (AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is WeaponsItem)
+                            if (AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is WeaponsItem || AllPlayers[user].GetInventory().GetinventoryItemByName(temp) is MagicAttacks)
                             {
                                 AllPlayers[user].AssignWeapon(AllPlayers[user].GetInventory().GetinventoryItemByName(temp));
                                 await Context.Channel.SendMessageAsync(temp + " have been equipped");
@@ -328,13 +329,131 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     AllPlayers[temp].SetPlayerStates(PlayerStates.Encounter);
                     AllPlayers[temp].SetQuestManager(new QuestManager());
                     AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], AllPlayers[temp].GetPlayerState());
-                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName());
+                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName());
                     await ReplyAsync("", false, builder.Build());
                 }
                 else
                 {
                     await Context.Channel.SendMessageAsync("you need to be out of an adventure to enter another");
                 }
+            }
+        }
+
+        [Command("_dungeon")]
+        public async Task EnterDungeon()
+        {
+
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
+                {
+                    builder.WithTitle("Dungeon").WithDescription(Context.User.Username).WithColor(Color.Blue);
+                    AllPlayers[temp].SetPlayerStates(PlayerStates.Dungeon);
+                    AllPlayers[temp].SetQuestManager(new QuestManager());
+                    AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], AllPlayers[temp].GetPlayerState());
+                    builder.AddField("Enemy", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName());
+                    await ReplyAsync("", false, builder.Build());
+                }
+                else
+                {
+                    await ReplyAsync("you need to be out of an adventure to enter another");
+                }
+            }
+        }
+
+        [Command("_pvp")]
+        public async Task EnterPvp(string username)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
+                {
+                    builder.WithTitle("Pvp").WithDescription(Context.User.Username).WithColor(Color.Blue);
+                    bool UserExists = false;
+                    Player defender = null;
+                    foreach (Player element in AllPlayers)
+                    {
+                        if (element.GetUsername() == username)
+                        {
+                            defender = element;
+                            UserExists = true;
+                        }
+                    }
+
+                    if (UserExists)
+                    {
+                        if (defender.GetPlayerState() == PlayerStates.Rest)
+                        {
+                            AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
+                            AllPlayers[temp].SetQuestManager(new QuestManager());
+                            AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp],PlayerStates.Pvp, defender);
+                            builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
+                        }
+                        else
+                        {
+                            builder.AddField("[Error]", "Player is busy and can't fight with you");
+                        }
+                    }
+                    else
+                    {
+                        builder.AddField("[Error]", "Player: " + username + " doesn't exist");
+                    }
+                }
+                else
+                {
+                    builder.AddField("[Error]", "you need to be out of an adventure to enter another");
+                }
+                await ReplyAsync("[Error]", false, builder.Build());
+            }
+        }
+
+        [Command("_accept")]
+        public async Task AcceptChallenege(string username = null)
+        {
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("Error, please try again");
+            }
+            else
+            {
+                EmbedBuilder builder = new EmbedBuilder();
+                if (AllPlayers[temp].GetPlayerState() != PlayerStates.Rest)
+                {
+                    if (username == null)
+                    {
+                        builder.AddField("[Error]", "Player doesn't exist");
+                    }
+                    else
+                    {
+                        for (int i = 0; i < AllPlayers.Count; i++)
+                        {
+                            if (AllPlayers[i].GetPlayername().ToLower() == username.ToLower())
+                            {
+                                for (int x = 0; x < AllPlayers[0].GetQuestManager().GetPlayerListRequest().Count; x++)
+                                {
+                                    if (AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].GetAttacker().GetUsername() == username)
+                                    {
+                                        AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].acceptRequest();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                builder.AddField("[ERROR]", "You're too busy to accept the request right now");
             }
         }
 
@@ -370,91 +489,191 @@ namespace AsukaBot_1._0.Module.Music.Logic
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
-                await ReplyAsync("", false, builder.WithTitle("[ERORR] Acount haven't been created yet, try again").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                await ReplyAsync("", false, builder.WithTitle("[ERROR] Acount haven't been created yet, try again").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
             }
             else
             {
                 Statsholder = AllPlayers[temp].GetStats();
-                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
+                switch (AllPlayers[temp].GetPlayerState())
                 {
-                    await Context.Channel.SendMessageAsync("You're not in combat and so can't attack anything");
-                }
-                else
-                {
-                    builder.AddField("Your Attack", AllPlayers[temp].Attack()).WithColor(Color.Red);
-                    builder.AddField("Counter attack", AllPlayers[temp].CounterAttack());
-                    builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
-                    if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() >= 0)
-                    {
-                        builder.AddField(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + "'s health", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetMaxHP());
-                    }
-                    else
-                    {
-                        builder.AddField(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + "'s health", "0" + "/" + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetMaxHP());
-                    }
-                    if (AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() >= 1)
-                    {
-                        if (AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() <= 0)
+                    case PlayerStates.Rest:
+                        await Context.Channel.SendMessageAsync("You're not in combat and so can't attack anything");
+                        break;
+
+                    case PlayerStates.Encounter:
+                        if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy() == null)
                         {
-                            builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP());
-                            builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetLoot(AllPlayers[temp]));
-                            try
-                            {
-                                builder.AddField("Gold", AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetGold(AllPlayers[temp])).ToString();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex);
-                            }
-                            if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetXP()))
-                            {
-                                builder.AddField("Level up", "");
-                            }
-                            switch (AllPlayers[temp].GetPlayerState())
-                            {
-                                case PlayerStates.Encounter:
-                                    AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
-                                    AllPlayers[temp].SetQuestManager(null);
-                                    AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
-                                    break;
-
-                                case PlayerStates.Dungeon:
-                                    Console.WriteLine("still need more work");
-                                    break;
-
-                                case PlayerStates.Campaign:
-                                    Console.WriteLine("still need more work");
-                                    break;
-
-                                case PlayerStates.CollabBoss:
-                                    Console.WriteLine("still need more work");
-                                    break;
-
-                                case PlayerStates.Pvp:
-                                    Console.WriteLine("still need more work");
-                                    break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (AllPlayers[temp].GetHardcoreState())
-                        {
-                            builder.AddField("Hardcore death", "you have died on Hardcore, so your character i now no more");
-                            AllPlayers.RemoveAt(temp);
+                            await Context.Channel.SendMessageAsync("You're not in combat and so can't attack anything");
+                            AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
                         }
                         else
                         {
-                            builder.AddField("Dead", "you have died and will escape the mission with no loot");
-                            AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
-                            AllPlayers[temp].SetQuestManager(null);
-                            AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
-                        }
-                    }
-                    builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+                            builder.AddField("Your Attack", AllPlayers[temp].Attack()).WithColor(Color.Red);
+                            builder.AddField("Counter attack", AllPlayers[temp].CounterAttack());
+                            builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles() > 0)
+                            {
+                                builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            }
 
-                    await ReplyAsync("", false, builder.Build());
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() > 0)
+                            {
+                                builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
+                            }
+                            else
+                            {
+                                builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", "0" + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
+
+                            }
+
+                            if (AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() >= 1)
+                            {
+                                if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() <= 0)
+                                {
+                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2))
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2 + " level up");
+                                    }
+                                    else
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
+                                    }
+                                    builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp]));
+                                    try
+                                    {
+                                        builder.AddField("Gold", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetGold(AllPlayers[temp], 1)).ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex);
+                                    }
+                                    AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                                    AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                    AllPlayers[temp].GetQuestManager().GetStoryMaker().RemoveAndUpdateList();
+                                    AllPlayers[temp].SetQuestManager(null);
+                                }
+
+                            }
+                            else
+                            {
+                                if (AllPlayers[temp].GetHardcoreState())
+                                {
+                                    builder.AddField("Hardcore death", "you have died on Hardcore, so your character i now no more");
+                                    AllPlayers.RemoveAt(temp);
+                                }
+                                else
+                                {
+                                    builder.AddField("Dead", "you have died and will escape the mission with no loot");
+                                    AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                                    AllPlayers[temp].SetQuestManager(null);
+                                    AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                }
+                            }
+                        }
+                        break;
+
+
+                    case PlayerStates.Dungeon:
+                        if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy() == null)
+                        {
+                            builder.AddField("You're not in combat and so can't attack anything", "");
+                            AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                        }
+                        else
+                        {
+                            builder.AddField("Your Attack", AllPlayers[temp].Attack()).WithColor(Color.Red);
+                            builder.AddField("Counter attack", AllPlayers[temp].CounterAttack());
+                            if (Statsholder.GetVitallity().GetMyHealth() < 0)
+                            {
+                                builder.AddField("Health", "0/" + Statsholder.GetVitallity().GetMyMaxHealth());
+                            }
+                            else
+                            {
+                                builder.AddField("Health", Statsholder.GetVitallity().GetMyHealth() + "/" + Statsholder.GetVitallity().GetMyMaxHealth());
+                            }
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles() > 0)
+                            {
+                                builder.AddField("Battles left", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetBattles());
+                            }
+                            if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() > 0)
+                            {
+                                builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
+                            }
+                            else
+                            {
+                                builder.AddField(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "'s health", "0/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
+                            }
+
+                            if (AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() >= 1)
+                            {
+                                if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() <= 0)
+                                {
+                                    if (AllPlayers[temp].AddXP(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2))
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2 + " level up");
+                                    }
+                                    else
+                                    {
+                                        builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
+                                    }
+                                    builder.AddField("Loot", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp]));
+                                    try
+                                    {
+                                        builder.AddField("Gold", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetGold(AllPlayers[temp], 2)).ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex);
+                                    }
+
+                                    AllPlayers[temp].GetQuestManager().GetStoryMaker().RemoveAndUpdateList();
+                                    if (AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy() == null)
+                                    {
+                                        builder.WithTitle("Dungeon complete");
+                                        AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                                        AllPlayers[temp].SetQuestManager(null);
+                                        AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (AllPlayers[temp].GetHardcoreState())
+                                {
+                                    builder.AddField("Hardcore death", "you have died on Hardcore, so your character i now no more");
+                                    AllPlayers.RemoveAt(temp);
+                                }
+                                else
+                                {
+                                    builder.AddField("Dead", "you have died and will escape the mission with no loot");
+                                    AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
+                                    AllPlayers[temp].SetQuestManager(null);
+                                    AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
+                                }
+                            }
+                        }
+
+                        break;
+
+                    case PlayerStates.CollabBoss:
+
+                        break;
+
+                    case PlayerStates.Campaign:
+
+                        break;
+
+
+                    case PlayerStates.Pvp:
+
+                        break;
                 }
+                builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+                if (builder.Fields.Count > 7)
+                {
+                    Console.WriteLine("Error inbound");
+                }
+                await ReplyAsync("", false, builder.Build());
             }
         }
 
@@ -474,10 +693,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
                 else
                 {
-                    await Context.Channel.SendMessageAsync("You're currently in combat \n You're in : " + AllPlayers[temp].GetPlayerState() + "\n-------------- \n    " + Context.User.Username + "\n    Health: " + AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() + "/" + AllPlayers[temp].GetStats().GetVitallity().GetMyMaxHealth() + "\n    MP: " + AllPlayers[temp].GetStats().GetMagic().GetMana() + "/" + AllPlayers[temp].GetStats().GetMagic().GetMaxMana() + "\n-------------- \n    " + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetName() + "\n    Health: " + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetCombatManager().GetEnemy().GetMaxHP());
+                    await Context.Channel.SendMessageAsync("You're currently in combat \n You're in : " + AllPlayers[temp].GetPlayerState() + "\n-------------- \n    " + Context.User.Username + "\n    Health: " + AllPlayers[temp].GetStats().GetVitallity().GetMyHealth() + "/" + AllPlayers[temp].GetStats().GetVitallity().GetMyMaxHealth() + "\n    MP: " + AllPlayers[temp].GetStats().GetMagic().GetMana() + "/" + AllPlayers[temp].GetStats().GetMagic().GetMaxMana() + "\n-------------- \n    " + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetName() + "\n    Health: " + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetHP() + "/" + AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetMaxHP());
                 }
             }
         }
+
+
 
         #endregion
 
@@ -497,6 +718,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             else
             {
                 Stats Statsholder = AllPlayers[temp].GetStats();
+                builder.AddInlineField("Class", AllPlayers[temp].GetClass().GetClassName());
                 builder.AddInlineField("Power", Statsholder.GetPower().GetPowerLvl());
                 builder.AddInlineField("Magic", Statsholder.GetMagic().GetMagicLvl());
                 builder.AddInlineField("Dexterity", Statsholder.GetDexterity().GetDexterityLvl());
@@ -739,6 +961,63 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 }
             }
         }
+
+        [Command("_class")]
+        public async Task PickClass(string pickedclass)
+        {
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await Context.Channel.SendMessageAsync("you error have seemed to occurred, please try redoing your command");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetClass() is ClassLess)
+                {
+                    switch (pickedclass.ToLower())
+                    {
+                        case "warrior":
+                            AllPlayers[temp].SetClass(new ClassWarior(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Warrior").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        case "paladin":
+                            AllPlayers[temp].SetClass(new ClassRanger(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Paladin").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        case "rouge":
+                            AllPlayers[temp].SetClass(new ClassRouge(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Rouge").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        case "cleric":
+                            AllPlayers[temp].SetClass(new ClassCleric(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "cleric").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        case "ranger":
+                            AllPlayers[temp].SetClass(new ClassRanger(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Ranger").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        case "mage":
+                            AllPlayers[temp].SetClass(new ClassMage(AllPlayers[temp]));
+                            await ReplyAsync("", false, new EmbedBuilder().AddField("Class", "Mage").WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username)).Build());
+                            break;
+
+                        default:
+                            await Context.Channel.SendMessageAsync("Invalid input");
+                            break;
+                    }
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync("You already have a class");
+                }
+            }
+        }
+
 
         #endregion
 
@@ -1033,19 +1312,100 @@ namespace AsukaBot_1._0.Module.Music.Logic
         [Command("_Mine")]
         public async Task Minning()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Mine");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Mine() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Iron")]);
+                    Builder.AddField("You mined: ", "Iron");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Mine() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Mine() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Mine() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
 
         [Command("_Chop")]
         public async Task ChopWood()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Chop");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Chop() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Regular wood")]);
+                    Builder.AddField("You chopped: ", " Regular wood");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Chop() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Chop() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Chop() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
 
         [Command("_Forage")]
         public async Task Forage()
         {
-
+            EmbedBuilder Builder = new EmbedBuilder();
+            Builder.WithTitle("Forage");
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                Builder.AddField("Error please try again", "");
+            }
+            else
+            {
+                if (AllPlayers[temp].Forage() == 0)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Add(AllPlayers[temp].GetInventory().GetAllItemsList()[AllPlayers[temp].GetInventory().GetItemByName("Berries")]);
+                    Builder.AddField("You chopped: ", "Berries");
+                }
+                else
+                {
+                    if ((300 - (AllPlayers[temp].Forage() / 1000)) > 60)
+                    {
+                        Builder.AddField("You need to wait", ((300 - (AllPlayers[temp].Forage() / 1000)) / 60).ToString("0") + " min");
+                    }
+                    else
+                    {
+                        Builder.AddField("You need to wait", (300 - (AllPlayers[temp].Forage() / 1000)).ToString("0") + " sec");
+                    }
+                }
+            }
+            Builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
+            await ReplyAsync("", false, Builder.Build());
         }
         #endregion
 
@@ -1059,7 +1419,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             if (AllPlayers == null)
             {
                 AllPlayers = new List<Player>();
-                AllPlayers.Add(new Player(username));
+                //AllPlayers.Add(new Player(username));
                 return -1;
             }
             else

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AsukaBot_1._0.Module.RPG.Logic
+﻿namespace AsukaBot_1._0.Module.RPG.Logic
 {
     public class Stats
     {
+
         private int SpendAbleStatPoints = 10;
         private Power MyPower;
         private Magic MyMagic;
@@ -24,6 +19,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             MyIntellegenc = myIntellegenc;
             MyVitallity = myVitallity;
             MyLuck = myLuck;
+        }
+
+        public Stats(Stats input)
+        {
+            MyPower = input.MyPower;
+            MyMagic = input.MyMagic;
+            MyDexterity = input.MyDexterity;
+            MyIntellegenc = input.MyIntellegenc;
+            MyVitallity = input.MyVitallity;
+            MyLuck = input.MyLuck;
         }
 
         public Power GetPower()
@@ -95,6 +100,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return DamageIncrease;
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public bool IncreaseStatLvl(int newlvlpoints)
         {
             if (newlvlpoints > 0)
@@ -129,6 +144,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return Lvl;
         }
 
+        public  void SetMana(int newmana)
+        {
+            if(MaxMana < newmana)
+            {
+                Mana = MaxMana;
+            }
+            else
+            {
+                Mana = newmana;
+            }
+        }
+
         public bool IncreaseStatLvl(int newlvlpoints)
         {
             if (newlvlpoints > 0)
@@ -143,6 +170,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 return false;
             }
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public int GetMana()
@@ -172,6 +209,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return Lvl;
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public bool IncreaseStatLvl(int newlvlpoints)
         {
             if (newlvlpoints > 0)
@@ -195,6 +242,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
     public class Intellegenc
     {
+        private float DamageIncrease;
         private int Lvl;
         private int Tier; /* 10 points equals another tier so 10 = 1  20 = 2 and so on*/
         private float MagicResistance;
@@ -203,6 +251,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             Lvl = lvl;
             Tier = Lvl;
             MagicResistance = Lvl * 0.2f;
+            DamageIncrease = lvl * 0.2f;
+            
         }
 
         public bool IncreaseStatLvl(int newlvlpoints)
@@ -210,7 +260,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             if (newlvlpoints > 0)
             {
                 Lvl += newlvlpoints;
-                Tier = Lvl;
+                Tier = (int)Lvl / 2;
                 MagicResistance = Lvl * 0.2f;
                 return true;
             }
@@ -218,6 +268,21 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 return false;
             }
+        }
+
+        public float GetDamgeModify()
+        {
+            return DamageIncrease;
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public int GetIntellegencLvl()
@@ -275,6 +340,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
         }
 
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
+        }
+
         public void GainFullHealth()
         {
             Health = MaxHealth;
@@ -312,6 +387,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             {
                 return false;
             }
+        }
+
+        public void IncreaseStatsFeat(int newlvlinput)
+        {
+            Lvl += newlvlinput;
+        }
+
+        public void DecreaseStatsFeat(int newlvlinput)
+        {
+            Lvl -= newlvlinput;
         }
 
         public int GetLuckLvl()

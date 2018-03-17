@@ -159,12 +159,15 @@
     <Compile Include="Classes\ConsoleChecker.cs" />
     <Compile Include="Classes\SaveDataToTxt.cs" />
     <Compile Include="Classes\SaveLoadRPGData.cs" />
+    <Compile Include="Classes\Services\MultipleKeyDictinary.cs" />
     <Compile Include="Classes\SingleTon.cs" />
     <Compile Include="Core\MyBot.cs" />
     <Compile Include="Module\Games\DnDModule.cs" />
     <Compile Include="Module\Games\GameBank.cs" />
     <Compile Include="Module\Games\GamesModule.cs" />
     <Compile Include="Module\Music\Music.cs" />
+    <Compile Include="Module\Music\SongInfo.cs" />
+    <Compile Include="Module\RPG\Logic\Classes\ClassBase.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\EnemyBase.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\MonsterDatabase.cs" />
     <Compile Include="Module\RPG\Logic\Inventory.cs" />
@@ -178,7 +181,9 @@
     <Compile Include="Module\RPG\Logic\Player.cs" />
     <Compile Include="Module\RPG\Logic\Questing\Encounter.cs" />
     <Compile Include="Module\RPG\Logic\Questing\QuestManager.cs" />
+    <Compile Include="Classes\RPGThreadChecker.cs" />
     <Compile Include="Module\RPG\Logic\Stats.cs" />
+    <Compile Include="Module\RPG\Logic\StatsModifer.cs" />
     <Compile Include="Module\RPG\RPG.cs" />
     <Compile Include="Module\StandardCommands\StandardCommandModule.cs" />
     <Compile Include="Program.cs" />
@@ -190,7 +195,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\" />
-    <Folder Include="Classes\Services\" />
+    <Folder Include="Module\Music\Local\" />
+    <Folder Include="Module\Music\Stream\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="libsodium.dll" />

@@ -50,20 +50,29 @@ namespace AsukaBot_1._0.Module.StandardCommands
         }
 
         [Command("purge")]
-        public async Task Purge(int amount = 0)
+        public async Task Purge(int amount = 1)
         {
-            IMessage[] messageToDelete;
+
             try
             {
-                Console.WriteLine("Purge comited by " + Context.User.Mention + " wiped " + amount + " message(s)");
-                //messageToDelete = await Context.Channel.GetCachedMessages(amount);
+                Console.WriteLine("Purge comited by " + Context.User.Username + ":" + Context.User.Mention + " wiped " + amount + " message(s)");
+                var messageToDelete = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
+                await Context.Channel.DeleteMessagesAsync(messageToDelete);
+                await Context.Channel.SendFileAsync(@"assets\sys\shutdownMessage.gif");
+                await ReplyAsync("Purging");
             }
             catch
             {
-
+                await ReplyAsync("the message can't be over 2 weeks old or delete more then 99 messages");
             }
-            await ReplyAsync("Purging");
         }
+
+        [Command("tacticalnuke")]
+        public async Task nuke(int amount = 1)
+        {
+            await Purge(amount);
+        }
+
 
         [Command("smug")]
         public async Task smug()
@@ -166,7 +175,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
         [Command("purge")]
         public async Task PerformPurge(int amount)
         {
-            IEnumerable<IMessage> messageToPurge= await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
+            IEnumerable<IMessage> messageToPurge = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
             try
             {
                 if (amount <= 100 || amount >= 0)
@@ -185,24 +194,16 @@ namespace AsukaBot_1._0.Module.StandardCommands
 
         }
 
+        [Command("come over kazuma")]
+        public async Task Kazuma()
+        {
+            EmbedBuilder build = new EmbedBuilder();
+            build.AddField("Kazuma", "desu").AddInlineField("Kazuma", "desu");
+            await ReplyAsync("", false, build.Build());
+        }
+
+
     }
 }
 
-//context
 
-
-//[Command("purge")]
-//public async Task Purge()
-//{
-//    EmbedBuilder builder = new EmbedBuilder();
-//    builder.WithTitle("Purge!!").WithDescription("Let the purge begin").WithColor(Color.Blue);
-//    await ReplyAsync("", false, builder.Build());
-
-//}
-//[Command("come over kazuma")]
-//public async Task Kazuma()
-//{
-//    EmbedBuilder build = new EmbedBuilder();
-//    build.AddField("Kazuma", "desu").AddInlineField("Kazuma", "desu");
-//    await ReplyAsync("", false, build.Build());
-//}      

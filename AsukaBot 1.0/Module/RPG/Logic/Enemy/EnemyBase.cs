@@ -44,12 +44,17 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
 
 
     }
-
     class Boss : EnemyBase
     {
-        public Boss(string name, int damgemax, int damgemin, int hp, int currenthp, int ac, int levelrangemin, int levelrangemax)
+        public Boss(string name, int damgemax, int damgemin, int hp, int ac, int levelrangemin, int levelrangemax, int xpgain, List<LootDrop> Loot, int MaxGoldDrop, int MinGoldDrop, int heavyattack)
         {
-
+            Name = name;
+            DamgeMax = damgemax;
+            DamgeMin = damgemin;
+            HP = hp;
+            CurrentHP = HP;
+            AC = ac;
+            XpGain = xpgain;
         }
     }
 
@@ -127,17 +132,17 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
             }
         }
 
-        public string GetGold(Player user)
+        public string GetGold(Player user, int rate)
         {
             int GoldForKill = rng.Next(GoldDropMin, GoldDropMax + 1);
-            user.GetInventory().GiveGold(GoldForKill);
+            user.GetInventory().GiveGold(GoldForKill * rate);
             if (GoldForKill == 0)
             {
                 return "you didn't gain any gold";
             }
             else
             {
-                return "You gained " + GoldForKill + " gold";
+                return "You gained " + GoldForKill * rate + " gold";
             }
         }
 
@@ -258,6 +263,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
         {
             return (AC + Lvl)/100;
         }
+
         public BaseItem GetDropChance()
         {
             if (Loot.Count() == 0 || Loot == null)

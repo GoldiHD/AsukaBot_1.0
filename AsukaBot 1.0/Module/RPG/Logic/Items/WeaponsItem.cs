@@ -10,12 +10,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
     {
         private int Damge;
         private PhyDamgeType MyDamgePhyType;
-        private WeaponMagicEffect MyWeapoEffect;
         private bool Craftable;
+        private MagicDamgeType MyMagicEffect;
         private List<CraftingItemInItem> CraftingItems;
 
 
-        public WeaponsItem(string name, string itemdescribe, int damge, PhyDamgeType mydamgephytype, int price, bool buyable, int itemvalue, bool questItem, bool craftable, List<ItemType> itemDefine, List<CraftingItemInItem> craftingItems, Rarity rare)
+        public WeaponsItem(string name, string itemdescribe, int damge, PhyDamgeType mydamgephytype, MagicDamgeType magictype,int price, bool buyable, int itemvalue, bool questItem, bool craftable, List<ItemType> itemDefine, List<CraftingItemInItem> craftingItems, Rarity rare)
         {
             Name = name;
             ItemDescribe = itemdescribe;
@@ -29,38 +29,15 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
             CraftingItems = craftingItems;
             MyItemType = itemDefine;
             MyRare = rare;
+            MyMagicEffect = magictype;
             
         }
 
         public Attack attack()
         {
-            if (MyWeapoEffect == null)
             {
-                return new Attack(Damge + MyWeapoEffect.GetExtraDamage(), MyDamgePhyType);
+                return new Attack(Damge, MyDamgePhyType, MyMagicEffect);
             }
-            else
-            {
-                return new Attack(Damge, MyDamgePhyType);
-            }
-        }
-
-        public WeaponsItem(string name, string itemdescribe, int damge, PhyDamgeType mydamgephytype, int price, bool buyable, int itemvalue, bool questItem, bool craftable, List<CraftingItemInItem> craftingItems, Rarity rare, WeaponMagicEffect myweaponeffect)
-        {
-            Name = name;
-            ItemDescribe = itemdescribe;
-            Damge = damge;
-            MyDamgePhyType = mydamgephytype;
-            Price = price;
-            Buyable = buyable;
-            ItemValue = itemvalue;
-            MyWeapoEffect = myweaponeffect;
-            QuestItem = questItem;
-            
-        }
-
-        public int GetDamge()
-        {
-            return Damge;
         }
 
         public PhyDamgeType GetPhyDamgeType()
@@ -88,16 +65,43 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
         }
 
+        /// <summary>
+        /// Only use for damage check and not actauly damage
+        /// </summary>
+        /// <returns>damage of the weapon</returns>
+        public int GetDamge()
+        {
+            return Damge;
+        }
+
     }
 
     public class Attack
     {
         private int Damge;
         private PhyDamgeType DamgephyType;
+        private MagicDamgeType DamageElementalType;
         public Attack(int damge, PhyDamgeType damgephyType)
         {
             Damge = damge;
             DamgephyType = damgephyType;
+        }
+
+        public Attack(int damge, PhyDamgeType damgephyType, MagicDamgeType damageelemnttype)
+        {
+            Damge = damge;
+            DamgephyType = damgephyType;
+            DamageElementalType = damageelemnttype;
+        }
+
+        public Attack()
+        {
+
+        }
+
+        public MagicDamgeType GetElementalDamageType()
+        {
+            return DamageElementalType;
         }
 
         public int GetDamge()
@@ -112,12 +116,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Items
 
     }
 
-
+    //fire = extra damage / Earth = slow attack (skip attack turn) / Wind = more likekly to miss or hit less vital spots(lower damage) / water = self heal
     public enum MagicDamgeType
     {
-        Fire, Earth, Wind, Water
+        Fire, Earth, Wind, Water, None
     }
-
+    //more damage toward flesh, blunt more damage toward Armor, Punture more damage toward magic
     public enum PhyDamgeType
     {
         Slash, Blunt, Punture, None
