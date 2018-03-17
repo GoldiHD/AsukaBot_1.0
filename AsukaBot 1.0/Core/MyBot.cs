@@ -19,14 +19,12 @@ namespace AsukaBot_1._0.Core
         public static DiscordSocketClient client;
         private CommandService command;
         private IServiceProvider service;
-        private AudioService Audio;
 
         public async Task Start()
         {
             client = new DiscordSocketClient();
-            command = new CommandService();
-            Audio = new AudioService();
-            service = new ServiceCollection().AddSingleton(client).AddSingleton(command).AddSingleton(Audio).BuildServiceProvider();
+            command = new CommandService();;
+            service = new ServiceCollection().AddSingleton(client).AddSingleton(command).BuildServiceProvider();
             
             string botToken = "Mjg1Mzc2NDM1NTU0ODc3NDQx.C5RVig.DSje5ToZYsU7-8jh4HunqG8I4KY";
             SingleTon.GetConsoleCheckerInstance().StartUp();
