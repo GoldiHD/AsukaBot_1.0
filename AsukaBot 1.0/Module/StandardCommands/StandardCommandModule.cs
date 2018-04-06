@@ -7,6 +7,7 @@ using Discord.Commands;
 using Discord;
 using System.IO;
 
+
 namespace AsukaBot_1._0.Module.StandardCommands
 {
     public class StandardCommandModule : ModuleBase<SocketCommandContext>
@@ -47,6 +48,22 @@ namespace AsukaBot_1._0.Module.StandardCommands
                 Console.WriteLine("Can't find or doesn't have access to " + path);
                 return TempHolder = new string[1] { "" }; //picture error process
             }
+        }
+        [Command("mal")]
+        public async Task SeachMal(string name)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            Console.WriteLine("Change this before release");
+            ICredentialContext credential = new CredentialContext
+            {
+                UserName = "<MyAnimeList.NET GoldiHD>",
+                Password = "<MyAnimeList.NET larshm12>"
+                
+            };
+            var asyncAnimeSearcher = new AnimeSearchMethodsAsync(credential);
+            var response = await asyncAnimeSearcher.SearchAsync(name);
+            builder.AddField("Mal", response);
+            await ReplyAsync("", false, builder.Build());
         }
 
         [Command("purge")]
@@ -168,7 +185,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
             else
             {
                 await Context.Channel.SendMessageAsync("I'm gonna shoot who ever tried to shut me down");
-                await Context.Channel.SendMessageAsync(@"assets\sys\failedToclose.gif");
+                await Context.Channel.SendFileAsync(@"assets\sys\failedToclose.gif");
             }
         }
 

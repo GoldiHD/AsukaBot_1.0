@@ -20,19 +20,36 @@ namespace AsukaBot_1._0.Classes
         public void RunTime()
         {
             RPG RPGRefrence = SingleTon.GetRPG();
+            if(RPGRefrence == null)
+            {
+                RPGRefrence = new RPG();
+            }
             while (true)
             {
                 if (RPGRefrence.GetPlayers() != null)
                 {
-                    if (RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest() != null)
+                    if (RPGRefrence.GetPlayers().Count != 0)
                     {
-                        if (RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest().Count != 0)
+                        if (RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest() != null)
                         {
-                            for (int i = 0; i < RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest().Count; i++)
+                            if (RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Count != 0)
                             {
-                                if(RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest()[i].IsTimeOut())
+                                for (int i = 0; i < RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Count; i++)
                                 {
-                                    RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest().Remove(RPGRefrence.GetPlayers()[0].GetQuestManager().GetPlayerListRequest()[i]);
+                                    if (RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i].IsTimeOut())
+                                    {
+                                        RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Remove(RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i]);
+                                    }
+                                }
+                            }
+                        }
+                        if(RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerBattleControler() != null)
+                        {
+                            if(RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerBattleControler().Count != 0)
+                            {
+                                for(int i = 0; i < RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerBattleControler().Count; i++)
+                                {
+                                    RPGRefrence.GetPlayers()[0].GetQuestManager().GetStoryMaker().GetPlayerBattleControler()[i].IsTimeOut();
                                 }
                             }
                         }

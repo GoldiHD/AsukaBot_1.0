@@ -26,8 +26,6 @@ namespace AsukaBot_1._0.Core
 
                 client = new DiscordSocketClient();
                 command = new CommandService();
-                Audio = new AudioService();
-                service = new ServiceCollection().AddSingleton(client).AddSingleton(command).AddSingleton(Audio).BuildServiceProvider();
 
                 botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
                 SingleTon.GetConsoleCheckerInstance().StartUp();
@@ -42,7 +40,7 @@ namespace AsukaBot_1._0.Core
             }
             else
             {
-                Console.WriteLine("no credentials could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt, so one have been created");
+                Console.WriteLine("no credentials file could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt \nso one have been created");
                 File.WriteAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt", "Discord token: ");
                 Console.ReadKey();
             }

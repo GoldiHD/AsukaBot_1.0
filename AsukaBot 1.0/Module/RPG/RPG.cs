@@ -21,6 +21,9 @@ namespace AsukaBot_1._0.Module.Music.Logic
         public RPG()
         {
             SingleTon.SetRPG(this);
+            AllPlayers = new List<Player>();
+            AllPlayers.Add(new Player());
+            AllPlayers[0].GiveNewQuestManager();
         }
 
         public void AddPlayer(Player LoadedUser)
@@ -398,7 +401,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         {
                             AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
                             AllPlayers[temp].SetQuestManager(new QuestManager());
-                            AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp],PlayerStates.Pvp, defender);
+                            AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], PlayerStates.Pvp, defender);
                             builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
                         }
                         else
@@ -442,11 +445,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         {
                             if (AllPlayers[i].GetPlayername().ToLower() == username.ToLower())
                             {
-                                for (int x = 0; x < AllPlayers[0].GetQuestManager().GetPlayerListRequest().Count; x++)
+                                for (int x = 0; x < AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Count; x++)
                                 {
-                                    if (AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].GetAttacker().GetUsername() == username)
+                                    if (AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i].GetAttacker().GetUsername() == username)
                                     {
-                                        AllPlayers[0].GetQuestManager().GetPlayerListRequest()[i].acceptRequest();
+                                        AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i].acceptRequest();
+                                        AllPlayers[0].GetQuestManager().GetStoryMaker().ChangeRequestToCombat(i);
                                     }
                                 }
                             }
@@ -665,7 +669,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
 
                     case PlayerStates.Pvp:
-
+                        if (AllPlayers[temp].GetPVPCombatControler() != null)
+                        {
+                            AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp]);
+                        }
+                        else
+                        {
+                            builder.AddField("[Error]", "Other user have not accepted the request");
+                        }
                         break;
                 }
                 builder.WithFooter(new EmbedFooterBuilder().WithText(Context.User.Username));
@@ -1419,30 +1430,29 @@ namespace AsukaBot_1._0.Module.Music.Logic
             if (AllPlayers == null)
             {
                 AllPlayers = new List<Player>();
-                //AllPlayers.Add(new Player(username));
-                return -1;
+                AllPlayers.Add(new Player());
+
+
+            }
+
+            bool DoesPlayerExists = false;
+            int Locations = 0;
+            for (int i = 0; i < AllPlayers.Count; i++)
+            {
+                if (AllPlayers[i].GetPlayername() == username)
+                {
+                    DoesPlayerExists = true;
+                    Locations = i;
+                }
+            }
+            if (DoesPlayerExists)
+            {
+                return Locations;
             }
             else
             {
-                bool DoesPlayerExists = false;
-                int Locations = 0;
-                for (int i = 0; i < AllPlayers.Count; i++)
-                {
-                    if (AllPlayers[i].GetPlayername() == username)
-                    {
-                        DoesPlayerExists = true;
-                        Locations = i;
-                    }
-                }
-                if (DoesPlayerExists)
-                {
-                    return Locations;
-                }
-                else
-                {
-                    AllPlayers.Add(new Player(username));
-                    return AllPlayers.Count - 1;
-                }
+                AllPlayers.Add(new Player(username));
+                return AllPlayers.Count - 1;
             }
         }
 

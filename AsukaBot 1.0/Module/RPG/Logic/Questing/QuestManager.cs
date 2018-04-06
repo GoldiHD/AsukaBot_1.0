@@ -13,7 +13,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
     {
         private StoryMaker story;
         private Player User;
-        private static List<PlayerRequest> PlayerRequestList;
         public void StartAdventure(Player player, PlayerStates state, Player Defender = null)
         {
             User = player;
@@ -47,14 +46,19 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
             }
         }
 
-        public List<PlayerRequest> GetPlayerListRequest()
-        {
-            return PlayerRequestList;
-        }
+
 
         public StoryMaker GetStoryMaker()
         {
             return story;
+        }
+
+        public void StartUpDataStory()
+        {
+            if(story == null)
+            {
+                story = new StoryMaker();
+            }
         }
 
     }
@@ -62,6 +66,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
     public class StoryMaker
     {
         public static List<PlayerRequest> PlayerBattleRequestList = new List<PlayerRequest>();
+        public static List<PVPCombatControler> PlayerBattleControler = new List<PVPCombatControler>();
         private MonsterDatabase MyMonsterDatabase = SingleTon.GetMonsterDatabaseInstace();
         private List<NormalEnemy> EnemyList = new List<NormalEnemy>();
         private NormalEnemy CurrentEnemy;
@@ -72,14 +77,33 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
                 EnemyList.Add(MyMonsterDatabase.GetEnemyAroundLvl(playerlvl));
             }
         }
+
+        public StoryMaker()
+        { }
+
+        public List<PVPCombatControler> GetPlayerBattleControler()
+        {
+            return PlayerBattleControler;
+        }
+
+        public List<PlayerRequest> GetPlayerListRequest()
+        {
+            return PlayerBattleRequestList;
+        }
+
         public StoryMaker(Player Attacker, Player Defender)
         {
-            if(PlayerBattleRequestList == null)
+            if (PlayerBattleRequestList == null)
             {
                 PlayerBattleRequestList = new List<PlayerRequest>();
             }
+            if (PlayerBattleControler == null)
+            {
+                PlayerBattleControler = new List<PVPCombatControler>();
+            }
             PlayerBattleRequestList.Add(new PlayerRequest(Attacker, Defender));
         }
+
 
         public int GetBattles()
         {
@@ -98,6 +122,17 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
             }
             return CurrentEnemy;
 
+        }
+
+        public void ChangeRequestToCombat(int i)
+        {
+
+            PVPCombatControler TempHolder = new PVPCombatControler();
+            TempHolder.AssignUsers(PlayerBattleRequestList[i].GetAttacker(), PlayerBattleRequestList[i].GetDefender());
+            PlayerBattleRequestList[i].GetAttacker().SetPVPCombatControler(TempHolder);
+            PlayerBattleRequestList[i].GetDefender().SetPVPCombatControler(TempHolder);
+            PlayerBattleRequestList.RemoveAt(i);
+            PlayerBattleControler.Add(TempHolder);
         }
 
         public void RemoveAndUpdateList()
@@ -139,7 +174,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
         {
             Attacker.SetPlayerStates(PlayerStates.Pvp);
             Defender.SetPlayerStates(PlayerStates.Pvp);
-            //CREATE PVP INSTANCE 
+            //remove from list and add
         }
 
         public Player GetAttacker()
@@ -150,6 +185,64 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
         public Player GetDefender()
         {
             return Defender;
+        }
+    }
+
+    public class PVPCombatControler
+    {
+        private Player Attacker;
+        private Player Defender;
+        public Stopwatch RoundTimeOut;
+        private bool AttackersTurn;
+
+        public void AssignUsers(Player attacker, Player defender)
+        {
+            Attacker = attacker;
+            Defender = defender;
+            RoundTimeOut.Start();
+        }
+        public void RotateTurn()
+        {
+            AttackersTurn = !AttackersTurn;
+        }
+
+        public void IsTimeOut()
+        {
+            if (RoundTimeOut.ElapsedMilliseconds > 10800)  // 3 min
+            {
+                RoundTimeOut.Reset();
+                RoundTimeOut.Start();
+                RotateTurn();
+            }
+        }
+
+        public string AttackOtherPlayer(Player UserAttackRequest)
+        {
+            if (UserAttackRequest == Attacker && AttackersTurn == true)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] attack not yet implamented in pvp");
+                Console.ForegroundColor = ConsoleColor.White;
+                RoundTimeOut.Reset();
+                RoundTimeOut.Start();
+                RotateTurn();
+            }
+            else if (UserAttackRequest == Defender && AttackersTurn == true)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] attack not yet implamented in pvp");
+                Console.ForegroundColor = ConsoleColor.White;
+                RoundTimeOut.Reset();
+                RoundTimeOut.Start();
+                RotateTurn();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("ERROR: Questmanager, PVP combat, attack failur");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            return "";
         }
     }
 }

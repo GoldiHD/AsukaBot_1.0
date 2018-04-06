@@ -31,6 +31,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private Stopwatch ForageSW = new Stopwatch();
         private Stopwatch PvpRequest = new Stopwatch();
         public StatsModifer FeatsSystem;
+        private PVPCombatControler MyPVPCombat;
 
         public Player()
         {
@@ -414,6 +415,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             }
         }
 
+        public void GiveNewQuestManager()
+        {
+            questManager = new QuestManager();
+            questManager.StartUpDataStory();
+        }
+
         public void AssignWeapon(object TheWeapon)
         {
             if (TheWeapon is WeaponsItem)
@@ -517,6 +524,16 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     break;
             }
 
+        }
+
+        public void SetPVPCombatControler(PVPCombatControler controler)
+        {
+            MyPVPCombat = controler;
+        }
+
+        public PVPCombatControler GetPVPCombatControler()
+        {
+            return MyPVPCombat;
         }
 
         public void ManageAttack()
