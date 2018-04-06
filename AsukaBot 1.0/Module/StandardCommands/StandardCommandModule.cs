@@ -52,18 +52,18 @@ namespace AsukaBot_1._0.Module.StandardCommands
         [Command("mal")]
         public async Task SeachMal(string name)
         {
-            EmbedBuilder builder = new EmbedBuilder();
-            Console.WriteLine("Change this before release");
-            ICredentialContext credential = new CredentialContext
-            {
-                UserName = "<MyAnimeList.NET GoldiHD>",
-                Password = "<MyAnimeList.NET larshm12>"
+            //EmbedBuilder builder = new EmbedBuilder();
+            //Console.WriteLine("Change this before release");
+            //ICredentialContext credential = new CredentialContext
+            //{
+            //    UserName = "<MyAnimeList.NET GoldiHD>",
+            //    Password = "<MyAnimeList.NET larshm12>"
                 
-            };
-            var asyncAnimeSearcher = new AnimeSearchMethodsAsync(credential);
-            var response = await asyncAnimeSearcher.SearchAsync(name);
-            builder.AddField("Mal", response);
-            await ReplyAsync("", false, builder.Build());
+            //};
+            //var asyncAnimeSearcher = new AnimeSearchMethodsAsync(credential);
+            //var response = await asyncAnimeSearcher.SearchAsync(name);
+            //builder.AddField("Mal", response);
+            //await ReplyAsync("", false, builder.Build());
         }
 
         [Command("purge")]
