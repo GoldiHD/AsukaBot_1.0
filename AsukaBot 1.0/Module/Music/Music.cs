@@ -7,7 +7,6 @@ using Discord;
 using Discord.Commands;
 using Discord.Audio;
 using System.Diagnostics;
-using Google.Apis.YouTube.v3;
 using System.IO;
 
 namespace AsukaBot_1._0.Module.Music
