@@ -86,5 +86,32 @@ namespace AsukaBot_1._0.Module.Games
             output = "Asuka bot got " + AsukaBot + ", " + Sender + " got " + SenderChoose + ", so " + Winner + " won";
             return output;
         }
+
+        [Command("rr")]
+        public async Task RussianRoulette()
+        {
+            await ReplyAsync(RusB());
+        }
+
+        [Command("rouettle")]
+        public async Task RR()
+        {
+            await ReplyAsync(RusB());
+        }
+
+        private string RusB()
+        {
+            bool[] Chamber = new bool[6] { true, false, false, false, false, false };
+
+            if (Chamber[RNG.Next(0, Chamber.Length)])
+            {
+                return ("You died faggot");
+            }
+            else
+            {
+                return ("You survived for now");
+            }
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Discord.Commands;
 using Discord;
 using System.IO;
-
+using Discord.WebSocket;
 
 namespace AsukaBot_1._0.Module.StandardCommands
 {
@@ -56,8 +56,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
             //Console.WriteLine("Change this before release");
             //ICredentialContext credential = new CredentialContext
             //{
-            //    UserName = "<MyAnimeList.NET GoldiHD>",
-            //    Password = "<MyAnimeList.NET larshm12>"
+
                 
             //};
             //var asyncAnimeSearcher = new AnimeSearchMethodsAsync(credential);
@@ -109,7 +108,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
         public async Task PostQoutes()
         {
             int i = rng.Next(0, qoutes.Length);
-            await Context.Channel.SendFileAsync(qoutes[i]);
+            await Context.Channel.SendMessageAsync(qoutes[i]);
         }
 
         [Command("bestgrill")]
@@ -155,7 +154,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "rpg":
-                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_encounter, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point)");
+                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_use, !_give, !_encounter,!_dungeon, !_pvp, !_accepct, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point), !_class, !_checkmarket, !_marketbuy, !_mine, !_chop, !_forage");
                     break;
 
                 case "music":
@@ -219,6 +218,23 @@ namespace AsukaBot_1._0.Module.StandardCommands
             await ReplyAsync("", false, build.Build());
         }
 
+        [Command("PickR")]
+        public async Task PickR([Remainder]string message )
+        {
+            SocketGuildUser userpicked = Context.Guild.Users.Where((x) => x.Status == UserStatus.Online).ElementAt(rng.Next(0, Context.Guild.Users.Where((x) => x.Status == UserStatus.Online).Count()));
+            await ReplyAsync(userpicked.Mention + " " + message);
+        }
+
+        [Command("asuka")]
+        public  async Task CallOnBot()
+        {
+            await ReplyAsync("Fuck off");
+        }
+        [Command("Chibi")]
+        public async Task FuckChibi()
+        {
+            await ReplyAsync("https://youtu.be/8fvOdtXeFjM?t=252");
+        }
 
     }
 }
