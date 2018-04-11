@@ -304,6 +304,104 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         public string GetUsername()
         {
             return Username;
+
+        }
+
+        public float Attack(Player target)
+        {
+            int Chance;
+            Attack Myattack;
+            int DamgeAfterAc = 0;
+            int weaponDamage = 0;
+            float DamgeModifyer;
+            bool ExtraAttack = false;
+            switch(MyAttackType)
+            {
+                case AttackType.Melee:
+                    if (EquipedWeaponItem == null)
+                    {
+                        weaponDamage = BareHandedDamge;
+                    }
+                    else
+                    {
+                        Myattack = EquipedWeaponItem.attack();
+                        weaponDamage = Myattack.GetDamge();
+                        switch(Myattack.GetDamgeTypePhy())
+                        {
+                            case PhyDamgeType.None:
+
+                                break;
+
+                            case PhyDamgeType.Blunt:
+
+                                break;
+
+                            case PhyDamgeType.Punture:
+
+                                break;
+
+                            case PhyDamgeType.Slash:
+
+                                break;
+                        }
+                        switch(Myattack.GetElementalDamageType())
+                        {
+                            case MagicDamgeType.None:
+
+                                break;
+
+                            case MagicDamgeType.Earth:
+
+                                break;
+
+                            case MagicDamgeType.Water:
+
+                                break;
+
+                            case MagicDamgeType.Wind:
+                                Chance = RNG.Next(0, 100);
+                                if (Chance < 26)
+                                {
+                                    ExtraAttack = true;
+                                }
+                                break;
+
+                            case MagicDamgeType.Fire:
+                                weaponDamage += (int)(weaponDamage * 0.5f);
+                                break;
+                        }
+                    }
+                    DamgeModifyer = PlayerStats.GetPower().GetDamgeModify();
+                    DamgeAfterAc = (int)((weaponDamage + (weaponDamage * (1 + DamgeModifyer))) - target.GetAC());
+                    if(DamgeAfterAc <= 0)
+                    {
+                        DamgeAfterAc = 0;
+                    }
+                    target.GetStats().GetVitallity().SetHealth(target.GetStats().GetVitallity().GetMyHealth() - DamgeAfterAc);
+                    return DamgeAfterAc;
+
+                case AttackType.Magic:
+                    if (EquipedMagicAttack == null)
+                    {
+                        weaponDamage = BareHandedDamge;
+                    }
+                    else
+                    {
+                        EquipedMagicAttack.GetDamage();
+                    }
+
+                    DamgeModifyer = PlayerStats.GetIntellegence().GetDamgeModify();
+                    DamgeAfterAc = (int)((weaponDamage + (weaponDamage * (1 + DamgeModifyer))) - target.GetAC());
+                    if (DamgeAfterAc <= 0)
+                    {
+                        DamgeAfterAc = 0;
+                    }
+                    target.GetStats().GetVitallity().SetHealth(target.GetStats().GetVitallity().GetMyHealth() - DamgeAfterAc);
+                    return DamgeAfterAc;
+
+                default:
+                    return 0;
+            }
         }
 
         public string Attack()
@@ -311,9 +409,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             int Chance;
             Attack Myattack;
             int DamgeAfterAc = 0;
-            int weaponDamge = 0;
-            MagicDamgeType MyMagicType;
-            PhyDamgeType MyPhyDamageType;
+            int weaponDamage = 0;
             float DamgeModifyer;
             bool ExtraAttack = false;
             switch (MyAttackType)
@@ -321,12 +417,12 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 case AttackType.Melee:
                     if (EquipedWeaponItem == null)
                     {
-                        weaponDamge = BareHandedDamge;
+                        weaponDamage = BareHandedDamge;
                     }
                     else
                     {
                         Myattack = EquipedWeaponItem.attack();
-                        weaponDamge = Myattack.GetDamge();
+                        weaponDamage = Myattack.GetDamge();
                         switch(Myattack.GetDamgeTypePhy())
                         {
                             case PhyDamgeType.None:
@@ -369,13 +465,13 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                                 break;
 
                             case MagicDamgeType.Fire:
-                                weaponDamge += (int)(weaponDamge * 0.5f);
+                                weaponDamage += (int)(weaponDamage * 0.5f);
                                 break;
                         }
                     }
                     DamgeModifyer = PlayerStats.GetPower().GetDamgeModify();
 
-                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    DamgeAfterAc = (int)((weaponDamage + (weaponDamage * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
                     if (DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;
@@ -388,7 +484,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                 case AttackType.Magic:
                     if (EquipedMagicAttack == null)
                     {
-                        weaponDamge = BareHandedDamge;
+                        weaponDamage = BareHandedDamge;
                     }
                     else
                     {
@@ -396,7 +492,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                     }
 
                     DamgeModifyer = PlayerStats.GetIntellegence().GetDamgeModify();
-                    DamgeAfterAc = (int)((weaponDamge + (weaponDamge * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
+                    DamgeAfterAc = (int)((weaponDamage + (weaponDamage * (1 + DamgeModifyer))) - questManager.GetStoryMaker().GetEnemy().DamgeModify());
                     if(DamgeAfterAc <= 0)
                     {
                         DamgeAfterAc = 0;

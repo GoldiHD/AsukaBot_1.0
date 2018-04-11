@@ -55,7 +55,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
 
         public void StartUpDataStory()
         {
-            if(story == null)
+            if (story == null)
             {
                 story = new StoryMaker();
             }
@@ -192,7 +192,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
     {
         private Player Attacker;
         private Player Defender;
-        public Stopwatch RoundTimeOut;
+        public Stopwatch RoundTimeOut = new Stopwatch();
         private bool AttackersTurn;
 
         public void AssignUsers(Player attacker, Player defender)
@@ -226,6 +226,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
                 RoundTimeOut.Reset();
                 RoundTimeOut.Start();
                 RotateTurn();
+                return "You attacked " + Defender.GetUsername() + " for " + Defender.Attack(Attacker)+ ", and got " + Defender.GetStats().GetVitallity().GetMyHealth() + "/"+ Defender.GetStats().GetVitallity().GetMyMaxHealth();
             }
             else if (UserAttackRequest == Defender && AttackersTurn == true)
             {
@@ -235,14 +236,19 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
                 RoundTimeOut.Reset();
                 RoundTimeOut.Start();
                 RotateTurn();
+                return "You attacked " + Attacker.GetUsername() + " for " + Defender.Attack(Attacker) + ", and got " + Defender.GetStats().GetVitallity().GetMyHealth() + "/" + Defender.GetStats().GetVitallity().GetMyMaxHealth();
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ERROR: Questmanager, PVP combat, attack failur");
-                Console.ForegroundColor = ConsoleColor.White;
+                if (UserAttackRequest.GetUsername() == Attacker.GetUsername())
+                {
+                    return "it's not your turn yet, either wait  " + (10800 - RoundTimeOut.ElapsedMilliseconds - 10800) + " or if " + Defender.GetUsername() + ", finshes up thire turn";
+                }
+                else
+                {
+                    return "it's not your turn yet, either wait  " + (10800 - RoundTimeOut.ElapsedMilliseconds - 10800) + " or if "+Attacker.GetUsername()+", finshes up thire turn";
+                }
             }
-            return "";
         }
     }
 }

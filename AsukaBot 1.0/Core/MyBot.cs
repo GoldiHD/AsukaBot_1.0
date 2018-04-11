@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using Discord.Commands;
 using System.Reflection;
 using Discord;
 using AsukaBot_1._0.Classes;
-using AsukaBot_1._0.Module.Music;
 using System.IO;
 
 namespace AsukaBot_1._0.Core
@@ -17,6 +15,7 @@ namespace AsukaBot_1._0.Core
         public static DiscordSocketClient client;
         private CommandService command;
         private IServiceProvider service;
+        private Random RNG = new Random();
 
         public async Task Start()
         {
@@ -33,8 +32,10 @@ namespace AsukaBot_1._0.Core
                 //event subcribsion
                 client.Log += Log;
                 client.UserJoined += AnnouceUserJoined;
+                //await client.SetGameAsync("Working on code with senpai");
+                await ChangeStatus();
                 await RegisterCommandAsync();
-                await client.LoginAsync(Discord.TokenType.Bot, botToken);
+                await client.LoginAsync(TokenType.Bot, botToken);
                 await client.StartAsync();
                 await Task.Delay(-1);
             }
@@ -51,6 +52,12 @@ namespace AsukaBot_1._0.Core
             SocketGuild guild = user.Guild;
             SocketTextChannel channel = guild.DefaultChannel;
             await channel.SendMessageAsync($"Welcome, {user.Mention}");
+        }
+
+        public async Task ChangeStatus()
+        {
+            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI"};
+            await client.SetGameAsync(GameStatues[RNG.Next(0, GameStatues.Length)]);
         }
 
         private Task Log(LogMessage arg)

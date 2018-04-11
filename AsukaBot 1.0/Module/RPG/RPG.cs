@@ -21,9 +21,12 @@ namespace AsukaBot_1._0.Module.Music.Logic
         public RPG()
         {
             SingleTon.SetRPG(this);
-            AllPlayers = new List<Player>();
-            AllPlayers.Add(new Player());
-            AllPlayers[0].GiveNewQuestManager();
+            if (AllPlayers == null)
+            {
+                AllPlayers = new List<Player>();
+                AllPlayers.Add(new Player());
+                AllPlayers[0].GiveNewQuestManager();
+            }
         }
 
         public void AddPlayer(Player LoadedUser)
@@ -402,7 +405,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
                             AllPlayers[temp].SetQuestManager(new QuestManager());
                             AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], PlayerStates.Pvp, defender);
-                            builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
+                            //builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
                         }
                         else
                         {
@@ -418,7 +421,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 {
                     builder.AddField("[Error]", "you need to be out of an adventure to enter another");
                 }
-                await ReplyAsync("[Error]", false, builder.Build());
+                await ReplyAsync("hel", false, builder.Build());
             }
         }
 
@@ -433,7 +436,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             else
             {
                 EmbedBuilder builder = new EmbedBuilder();
-                if (AllPlayers[temp].GetPlayerState() != PlayerStates.Rest)
+                if (AllPlayers[temp].GetPlayerState() == PlayerStates.Rest)
                 {
                     if (username == null)
                     {
@@ -441,23 +444,26 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     }
                     else
                     {
-                        for (int i = 0; i < AllPlayers.Count; i++)
+                        for (int x = 0; x < AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Count; x++)
                         {
-                            if (AllPlayers[i].GetPlayername().ToLower() == username.ToLower())
+                            if (AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[x].GetAttacker().GetUsername() == username)
                             {
-                                for (int x = 0; x < AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest().Count; x++)
-                                {
-                                    if (AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i].GetAttacker().GetUsername() == username)
-                                    {
-                                        AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[i].acceptRequest();
-                                        AllPlayers[0].GetQuestManager().GetStoryMaker().ChangeRequestToCombat(i);
-                                    }
-                                }
+                                AllPlayers[0].GetQuestManager().GetStoryMaker().GetPlayerListRequest()[x].acceptRequest();
+                                AllPlayers[0].GetQuestManager().GetStoryMaker().ChangeRequestToCombat(x);
+                                builder.AddField("PVP", "Match have been started");
+                            }
+                            else
+                            {
+                                builder.AddField("PVP", "You have no challenge from him");
                             }
                         }
                     }
                 }
-                builder.AddField("[ERROR]", "You're too busy to accept the request right now");
+                else
+                {
+                    builder.AddField("[ERROR]", "You're too busy to accept the request right now");
+                }
+                await ReplyAsync("test", false, builder.Build());
             }
         }
 
@@ -671,7 +677,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     case PlayerStates.Pvp:
                         if (AllPlayers[temp].GetPVPCombatControler() != null)
                         {
-                            AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp]);
+                            await ReplyAsync(AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp]));
                         }
                         else
                         {
@@ -714,6 +720,31 @@ namespace AsukaBot_1._0.Module.Music.Logic
         #endregion
 
         #region Stats Commands
+
+        [Command("_hardcore")]
+        public async Task toggleHardCore()
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                builder.AddField("Hardcore","[Error]");
+            }
+            else
+            {
+                if (AllPlayers[temp].GetHardcoreState())
+                {
+                    AllPlayers[temp].SetHardcoreState(true);
+                    builder.AddField("Hardcore","You have set to, preper to die");
+                }
+                else
+                {
+                    builder.AddField("Hardcore", "You're already in hardcore mode");
+                }
+            }
+            await ReplyAsync("Harcore", false, builder.Build());
+
+        }
 
         [Command("_stats")]
         public async Task StatsDisplay()
@@ -1430,7 +1461,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             if (AllPlayers == null)
             {
                 AllPlayers = new List<Player>();
-                AllPlayers.Add(new Player());
+                AllPlayers.Add(new Player(username));
 
 
             }
