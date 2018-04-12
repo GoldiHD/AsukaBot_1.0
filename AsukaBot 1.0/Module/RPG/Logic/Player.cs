@@ -188,6 +188,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             return AC;
         }
 
+        public void HealToMax()
+        {
+            GetStats().GetVitallity().SetHealth(GetStats().GetVitallity().GetMyMaxHealth());
+        }
+
 
         private void Levelup()
         {

@@ -105,12 +105,40 @@ namespace AsukaBot_1._0.Module.Games
 
             if (Chamber[RNG.Next(0, Chamber.Length)])
             {
-                return ("You died faggot");
+                return ("You died");
             }
             else
             {
                 return ("You survived for now");
             }
+        }
+
+        [Command("dice")]
+        public async Task RollDice([Remainder]string input)
+        {
+            input = input.ToLower();
+            List<int> Rolls = new List<int>();
+            try
+            {
+                int[] InputData = Array.ConvertAll(input.Split(new char[] { 'd' }), int.Parse);
+                for(int i = 0; i < InputData[0]; i++)
+                {
+                    Rolls.Add(RNG.Next(1, InputData[1] + 1));
+                }
+                await ReplyAsync(string.Join(",", Rolls));
+            }
+            catch
+            {
+                await ReplyAsync("[ERROR], doesn't contain all the parameters");
+            }
+            
+
+        }
+
+        [Command("diceVs")]
+        public async Task RollDiceVs()
+        {
+
         }
 
     }

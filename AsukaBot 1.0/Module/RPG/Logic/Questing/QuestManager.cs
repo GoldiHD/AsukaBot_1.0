@@ -208,7 +208,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
 
         public void IsTimeOut()
         {
-            if (RoundTimeOut.ElapsedMilliseconds > 10800)  // 3 min
+            if (RoundTimeOut.ElapsedMilliseconds > 120000)  // 2 min
             {
                 RoundTimeOut.Reset();
                 RoundTimeOut.Start();
@@ -216,37 +216,54 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
             }
         }
 
+        public void EndBattle()
+        {
+            Attacker.SetPlayerStates(PlayerStates.Rest);
+            Defender.SetPlayerStates(PlayerStates.Rest);
+        }
+
         public string AttackOtherPlayer(Player UserAttackRequest)
         {
+            float Damage;
             if (UserAttackRequest == Attacker && AttackersTurn == true)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] attack not yet implamented in pvp");
-                Console.ForegroundColor = ConsoleColor.White;
                 RoundTimeOut.Reset();
                 RoundTimeOut.Start();
                 RotateTurn();
-                return "You attacked " + Defender.GetUsername() + " for " + Defender.Attack(Attacker)+ ", and got " + Defender.GetStats().GetVitallity().GetMyHealth() + "/"+ Defender.GetStats().GetVitallity().GetMyMaxHealth();
+                Damage = Attacker.Attack(Defender);
+                return "You attacked " + Defender.GetUsername() + " for " + Damage  + ", and got " + Defender.GetStats().GetVitallity().GetMyHealth() + "/" + Defender.GetStats().GetVitallity().GetMyMaxHealth();
             }
-            else if (UserAttackRequest == Defender && AttackersTurn == true)
+            else if (UserAttackRequest == Defender && AttackersTurn == false)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] attack not yet implamented in pvp");
-                Console.ForegroundColor = ConsoleColor.White;
                 RoundTimeOut.Reset();
                 RoundTimeOut.Start();
                 RotateTurn();
-                return "You attacked " + Attacker.GetUsername() + " for " + Defender.Attack(Attacker) + ", and got " + Defender.GetStats().GetVitallity().GetMyHealth() + "/" + Defender.GetStats().GetVitallity().GetMyMaxHealth();
+                Damage = Defender.Attack(Attacker);
+                return "You attacked " + Attacker.GetUsername() + " for " + Damage + ", and got " + Attacker.GetStats().GetVitallity().GetMyHealth() + "/" + Attacker.GetStats().GetVitallity().GetMyMaxHealth();
             }
             else
             {
                 if (UserAttackRequest.GetUsername() == Attacker.GetUsername())
                 {
-                    return "it's not your turn yet, either wait  " + (10800 - RoundTimeOut.ElapsedMilliseconds - 10800) + " or if " + Defender.GetUsername() + ", finshes up thire turn";
+                    if (RoundTimeOut.ElapsedMilliseconds > 60000)
+                    {
+                        return "it's not your turn yet, either wait  " + ((120000 - RoundTimeOut.ElapsedMilliseconds) / 1000) + "S or if " + Defender.GetUsername() + ", finshes up thire turn";
+                    }
+                    else
+                    {
+                        return "it's not your turn yet, either wait  " + ((120000 - RoundTimeOut.ElapsedMilliseconds) / 60000) + "M or if " + Defender.GetUsername() + ", finshes up thire turn";
+                    }
                 }
                 else
                 {
-                    return "it's not your turn yet, either wait  " + (10800 - RoundTimeOut.ElapsedMilliseconds - 10800) + " or if "+Attacker.GetUsername()+", finshes up thire turn";
+                    if (RoundTimeOut.ElapsedMilliseconds < 60000)
+                    {
+                        return "it's not your turn yet, either wait  " + ((120000 - RoundTimeOut.ElapsedMilliseconds)/1000) + "S or if " + Attacker.GetUsername() + ", finshes up thire turn";
+                    }
+                    else
+                    {
+                        return "it's not your turn yet, either wait  " + ((120000 - RoundTimeOut.ElapsedMilliseconds) / 60000) + "M or if " + Attacker.GetUsername() + ", finshes up thire turn";
+                    }
                 }
             }
         }

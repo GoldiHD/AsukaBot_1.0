@@ -49,21 +49,6 @@ namespace AsukaBot_1._0.Module.StandardCommands
                 return TempHolder = new string[1] { "" }; //picture error process
             }
         }
-        [Command("mal")]
-        public async Task SeachMal(string name)
-        {
-            //EmbedBuilder builder = new EmbedBuilder();
-            //Console.WriteLine("Change this before release");
-            //ICredentialContext credential = new CredentialContext
-            //{
-
-                
-            //};
-            //var asyncAnimeSearcher = new AnimeSearchMethodsAsync(credential);
-            //var response = await asyncAnimeSearcher.SearchAsync(name);
-            //builder.AddField("Mal", response);
-            //await ReplyAsync("", false, builder.Build());
-        }
 
         [Command("purge")]
         public async Task Purge(int amount = 1)
@@ -134,7 +119,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "game":
-                    await Context.Channel.SendMessageAsync("!RPS (Rock, Paper Scissor)");
+                    await Context.Channel.SendMessageAsync("!RPS (Rock, Paper, Scissor), !Dice(xdx), !RR");
                     break;
 
                 case "bank":
@@ -154,7 +139,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "rpg":
-                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_use, !_give, !_encounter,!_dungeon, !_pvp, !_accepct, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point), !_class, !_checkmarket, !_marketbuy, !_mine, !_chop, !_forage");
+                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_use, !_give, !_encounter,!_dungeon, !_pvp, !_accepct, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point), !_class, !_checkmarket, !_marketsell !_marketbuy, !_mine, !_chop, !_forage");
                     break;
 
                 case "music":

@@ -391,7 +391,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     Player defender = null;
                     foreach (Player element in AllPlayers)
                     {
-                        if (element.GetUsername() == username)
+                        if (element.GetUsername().ToLower() == username.ToLower())
                         {
                             defender = element;
                             UserExists = true;
@@ -405,7 +405,8 @@ namespace AsukaBot_1._0.Module.Music.Logic
                             AllPlayers[temp].SetPlayerStates(PlayerStates.Pvp);
                             AllPlayers[temp].SetQuestManager(new QuestManager());
                             AllPlayers[temp].GetQuestManager().StartAdventure(AllPlayers[temp], PlayerStates.Pvp, defender);
-                            //builder.AddField(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
+                            Console.WriteLine(AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")", " ");
+                            builder.AddField("PVP",AllPlayers[temp].GetUsername() + " is waiting on " + defender.GetUsername() + " to accept his fighting request(!_accept " + AllPlayers[temp].GetUsername() + ")");
                         }
                         else
                         {
@@ -481,6 +482,11 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 {
                     AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
                     await Context.Channel.SendMessageAsync("you have successfully escaped");
+                    AllPlayers[temp].HealToMax();
+                    if (AllPlayers[temp].GetPVPCombatControler() != null)
+                    {
+                        AllPlayers[temp].GetPVPCombatControler().EndBattle();
+                    }
                     AllPlayers[temp].SetQuestManager(null);
                 }
                 else
@@ -728,14 +734,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
             int temp = DoIExist(Context.User.Username);
             if (temp == -1)
             {
-                builder.AddField("Hardcore","[Error]");
+                builder.AddField("Hardcore", "[Error]");
             }
             else
             {
                 if (AllPlayers[temp].GetHardcoreState())
                 {
                     AllPlayers[temp].SetHardcoreState(true);
-                    builder.AddField("Hardcore","You have set to, preper to die");
+                    builder.AddField("Hardcore", "You have set to, preper to die");
                 }
                 else
                 {
@@ -1348,6 +1354,58 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
+        [Command("_MarketSell")]
+        public async Task SellOnMarket(int amount, [Remainder]string itemName)
+        {
+            bool itemInInventory = false;
+            EmbedBuilder builder = new EmbedBuilder();
+            int temp = DoIExist(Context.User.Username);
+            if (temp == -1)
+            {
+                await ReplyAsync("[ERROR]" + "You're account wasn't instanceiated yet");
+            }
+            else
+            {
+                IGuild hello;
+                if (AllPlayers[temp].GetInventory().GetTheInventory().Count > 0)
+                {
+                    for (int i = 0; i < AllPlayers[temp].GetInventory().GetTheInventory().Count; i++)
+                    {
+                        if (itemName.ToLower() == AllPlayers[temp].GetInventory().GetTheInventory()[i].Getname().ToLower())
+                        {
+                            if (AllPlayers[temp].GetInventory().GetTheInventory()[i].GetBuyableState())
+                            {
+                               if( AllPlayers[temp].GetInventory().GetTheInventory().FindAll(x => x.Getname().ToLower() == itemName.ToLower()).Count >= amount)
+                                {
+                                    itemInInventory = true;
+                                }                   
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    builder.AddField("Nothing", "you don't even have anything to sell");
+                }
+            }
+
+            if (itemInInventory)
+            {
+                for (int i = 0; i < amount; i++)
+                {
+                    AllPlayers[temp].GetInventory().GetTheInventory().Remove(AllPlayers[temp].GetInventory().GetTheInventory().Find(x => x.Getname() == itemName));
+                    
+                }
+                AllPlayers[temp].GetInventory().GiveGold(CheckUpList.GetAllItemsList().Find(x => x.Getname().ToLower() == itemName.ToLower()).GetPrice()* amount);
+                builder.AddField("Item(s) sold", "Sold: " + itemName + " " + amount + " for " + (CheckUpList.GetAllItemsList().Find(x => x.Getname().ToLower() == itemName.ToLower()).GetPrice() * amount) + " Gold");
+            }
+            else
+            {
+                builder.AddField("[ERROR]", "the item can't be sold/do not exists, or you don' have enough of it");
+            }
+            builder.Footer = new EmbedFooterBuilder().WithText(Context.User.Username);
+            await ReplyAsync("Market", false, builder.Build());
+        }
         #endregion
 
         #region Farming
