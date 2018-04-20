@@ -20,6 +20,7 @@ namespace AsukaBot_1._0.Core
         public async Task Start()
         {
             Console.WriteLine("Created by Lars H M/Goldi");
+            //if(File.Exists(Directory.GetCurrentDirectory() + "//assets"))
             if (File.Exists(Directory.GetCurrentDirectory() + "//assets//credentials.txt"))
             {
 
@@ -29,6 +30,7 @@ namespace AsukaBot_1._0.Core
                 botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
                 SingleTon.GetConsoleCheckerInstance().StartUp();
                 SingleTon.GetRPGThread().StartUp();
+                SingleTon.SetClient(client);
                 //event subcribsion
                 client.Log += Log;
                 client.UserJoined += AnnouceUserJoined;
@@ -56,7 +58,7 @@ namespace AsukaBot_1._0.Core
 
         public async Task ChangeStatus()
         {
-            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI"};
+            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI", "Creating virus, "};
             await client.SetGameAsync(GameStatues[RNG.Next(0, GameStatues.Length)]);
         }
 

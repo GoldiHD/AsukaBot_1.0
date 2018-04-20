@@ -11,6 +11,7 @@ using Discord.Audio;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using AsukaBot_1._0.Classes;
 
 namespace AsukaBot_1._0.Module.Music
 {
@@ -38,15 +39,17 @@ namespace AsukaBot_1._0.Module.Music
         [Command("join")]
         public async Task JoinChannel(IVoiceChannel Currenchannel = null)
         {
-            if (Currenchannel == null)
-            {
-                channel = (Context.Message.Author as IGuildUser)?.VoiceChannel;
-            }
-            else
-            {
-                channel = Currenchannel;
-            }
+
+            channel = (Context.Message.Author as IGuildUser)?.VoiceChannel;
+
             audioClient = await channel.ConnectAsync();
+        }
+
+        [Command("leave")]
+        public async Task LeaveChannel()
+        {
+            Console.WriteLine(channel.Bitrate);
+            await audioClient.StopAsync();
         }
 
         [Command("play")]
@@ -55,7 +58,7 @@ namespace AsukaBot_1._0.Module.Music
             EmbedBuilder builder = new EmbedBuilder();
 
             SongInfo songInfo = new SongInfo();
-            if(audioClient == null)
+            if (audioClient == null)
             {
                 channel = (Context.Message.Author as IGuildUser)?.VoiceChannel;
             }
@@ -71,7 +74,6 @@ namespace AsukaBot_1._0.Module.Music
         [Command("pause")]
         public async Task StopMusic()
         {
-            player.Suspend();
             await ReplyAsync("Paused");
         }
 
@@ -96,7 +98,7 @@ namespace AsukaBot_1._0.Module.Music
             {
                 for (int i = 0; i < PlayList.Count; i++)
                 {
-                    await Context.Channel.SendMessageAsync((1 + i)+":" +PlayList.ToArray()[i].title); // fucking cancer
+                    await Context.Channel.SendMessageAsync((1 + i) + ":" + PlayList.ToArray()[i].title); // fucking cancer
                 }
             }
             else
@@ -108,16 +110,13 @@ namespace AsukaBot_1._0.Module.Music
 
         public async void PlayMusicAsync()
         {
+
             Process ffmpeg = null;
             AudioStream pcm = null;
             while (true)
             {
                 if (PlayList.Count > 0)
                 {
-                    Console.WriteLine("in");
-
-                    PlayList.Peek();
-
                     await GetAudioClient();
                     if (audioClient == null)
                     {
@@ -126,9 +125,8 @@ namespace AsukaBot_1._0.Module.Music
                     }
                     else
                     {
-                        //ffmpeg = CreateStream(PlayList.Peek().GetFilePath());
                         ffmpeg = CreateStreamAudio(await PlayList.Peek().Uri());
-                        pcm = audioClient.CreatePCMStream(AudioApplication.Mixed);
+                        pcm = audioClient.CreatePCMStream(AudioApplication.Music);
                         try
                         {
                             await ffmpeg.StandardOutput.BaseStream.CopyToAsync(pcm);
@@ -141,16 +139,6 @@ namespace AsukaBot_1._0.Module.Music
             }
         }
 
-        //private Process CreateStream(string path)
-        //{
-        //    return Process.Start(new ProcessStartInfo
-        //    {
-        //        FileName = "ffmpeg.exe",
-        //        Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
-        //        UseShellExecute = false,
-        //        RedirectStandardOutput = true
-        //    });
-        //}
 
         private Process CreateStreamAudio(string path)
         {
@@ -183,25 +171,7 @@ namespace AsukaBot_1._0.Module.Music
         public string author;
         public string duration;
         public string ID;
-        private string StartPath = Directory.GetCurrentDirectory();
         public Func<Task<string>> Uri;
-
-        //public async Task AddVideoInfo(string url)
-        //{
-        //    var client = new YoutubeClient();
-        //    ID = YoutubeClient.ParseVideoId(url);
-        //    video = await client.GetVideoAsync(ID);
-
-        //    title = video.Title;
-        //    author = video.Author;
-        //    duration = video.Duration.ToString();
-        //    var streamInfoSet = await client.GetVideoMediaStreamInfosAsync(ID);
-
-        //    var streamInfo = streamInfoSet.Muxed.WithHighestVideoQuality();
-
-        //    var ext = streamInfo.Container.GetFileExtension();
-        //    await client.DownloadMediaStreamAsync(streamInfo, $"{StartPath}/assets/music/{ID}.mp3");
-        //}
 
 
         public async Task AddVideoInfoAudio(string url)
@@ -214,9 +184,8 @@ namespace AsukaBot_1._0.Module.Music
             author = video.Author;
             duration = video.Duration.ToString();
             var streamInfoSet = await client.GetVideoMediaStreamInfosAsync(ID);
-            var stream = streamInfoSet.Audio
-                .OrderByDescending(x => x.Bitrate)
-                .FirstOrDefault();
+            var stream = streamInfoSet.Audio.WithHighestBitrate();
+
             Uri = async () =>
             {
                 await Task.Yield();
@@ -224,26 +193,5 @@ namespace AsukaBot_1._0.Module.Music
             };
 
         }
-        
-
-        public string GetFilePath()
-        {
-            return $"{StartPath}/assets/music/{ID}.mp3";
-        }
-
-        public void RemoveFile()
-        {
-            try
-            {
-                Directory.Delete($"{StartPath}/assets/music/{ID}.mp3");
-                Console.WriteLine("Deleted" + ID + ".mp3");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
     }
-
 }

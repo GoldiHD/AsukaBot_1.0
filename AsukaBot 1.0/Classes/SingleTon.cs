@@ -8,12 +8,24 @@ namespace AsukaBot_1._0.Classes
 {
     class SingleTon
     {
+        private static Discord.IDiscordClient discordRefence;
         private static MonsterDatabase MyMonsterDatabaseInstace;
         private static ConsoleChecker ConsoleCheckerInstance;
         private static Thread CheckConsole;
         private static Thread RPGThreadCheck;
         private static RPG RPGInstance;
         private static RPGThreadChecker RPGThreadCheckerInstance;
+
+        public static void SetClient(Discord.IDiscordClient client)
+        {
+            discordRefence = client;
+        }
+
+        public static Discord.IDiscordClient GetDiscordClient()
+        {
+            return discordRefence;
+        }
+
 
         public static MonsterDatabase GetMonsterDatabaseInstace()
         {
