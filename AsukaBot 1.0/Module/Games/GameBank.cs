@@ -37,7 +37,7 @@ namespace AsukaBot_1._0.Module.Games
             }
             else
             {
-                await ReplyAsync("Account does'n exist");
+                await ReplyAsync("Account doesn't exist");
             }
         }
 

@@ -18,9 +18,13 @@ namespace AsukaBot_1._0.Module.Music
     public class Music : ModuleBase<ICommandContext>
     {
         static Queue<SongInfo> PlayList;
-        public static Thread player;
+        static Queue<string> PreQueue;
+        public static Task player;
+        public static Thread musicDownloader;
         public static IVoiceChannel channel;
         public static IAudioClient audioClient;
+        private static CancellationTokenSource TokenMaster = new CancellationTokenSource();
+        
 
         public Music()
         {
@@ -30,9 +34,22 @@ namespace AsukaBot_1._0.Module.Music
             }
             if (player == null)
             {
-                player = new Thread(new ThreadStart(PlayMusicAsync));
+                player = new Task(PlayMusicAsync, TokenMaster.Token);
                 player.Start();
             }
+
+            if (PreQueue == null)
+            {
+                PreQueue = new Queue<string>();
+            }
+
+            if (musicDownloader == null)
+            {
+                musicDownloader = new Thread(new ThreadStart(DownloadAndQueue));
+                musicDownloader.Start();
+            }
+
+
         }
 
 
@@ -55,20 +72,15 @@ namespace AsukaBot_1._0.Module.Music
         [Command("play")]
         public async Task PlayMusic([Remainder]string url)
         {
-            EmbedBuilder builder = new EmbedBuilder();
 
-            SongInfo songInfo = new SongInfo();
+
+            PreQueue.Enqueue(url);
+
             if (audioClient == null)
             {
                 channel = (Context.Message.Author as IGuildUser)?.VoiceChannel;
             }
-            //await songInfo.AddVideoInfo(url);
-            await songInfo.AddVideoInfoAudio(url);
-            PlayList.Enqueue(songInfo);
-            builder.AddField("Title", songInfo.title);
-            builder.AddField("Duration", songInfo.duration);
-            builder.AddField("Queue", PlayList.Count);
-            await ReplyAsync("Youtube", false, builder.Build());
+            await ReplyAsync("Song have been queued");
         }
 
         [Command("pause")]
@@ -80,32 +92,121 @@ namespace AsukaBot_1._0.Module.Music
         [Command("unpause")]
         public async Task RestartMusic()
         {
-            player.Resume();
             await ReplyAsync("Unpaused");
         }
 
-        [Command("stop")]
+        [Command("skip")]
         public async Task Killmusic()
         {
-            player.Abort();
+            Console.WriteLine(player.Status);
+            TokenMaster.Cancel();
+            Console.WriteLine(player.Status);
             await ReplyAsync("music stopped");
+        }
+
+        [Command("current")]
+        public async Task ShowCurrentSong()
+        {
+            if (PlayList.Count > 0)
+            {
+                await Context.Channel.SendMessageAsync(PlayList.Peek().title);
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("No songs on the playlist");
+            }
+        }
+
+        [Command("clear")]
+        public async Task ClearPlayList()
+        {
+            PreQueue.Clear();
+            PlayList.Clear();
         }
 
         [Command("playlist")]
         public async Task GetPlayList()
         {
+            int location = 1;
+            string respone = "";
+            Video TempHolder;
+            YoutubeClient client = new YoutubeClient();
             if (PlayList.Count > 0)
             {
                 for (int i = 0; i < PlayList.Count; i++)
                 {
-                    await Context.Channel.SendMessageAsync((1 + i) + ":" + PlayList.ToArray()[i].title); // fucking cancer
+                    respone += (location) + ": " + PlayList.ToArray()[i].title + "\n";
+                    location++;
                 }
+                if (PreQueue.Count > 0)
+                {
+                    for (int x = 0; x < PreQueue.Count; x++)
+                    {
+
+                        TempHolder = await client.GetVideoAsync(YoutubeClient.ParseVideoId(PreQueue.ToArray()[x]));
+                        respone += (location) + ": " + TempHolder.Title+"\n";
+                        location++;
+                    }
+                }
+                await Context.Channel.SendMessageAsync(respone);
             }
             else
             {
                 await ReplyAsync("Error no songs in playlist");
             }
 
+        }
+
+        public async void DownloadAndQueue()
+        {
+            YoutubeClient client = new YoutubeClient();
+            while (true)
+            {
+                if (PreQueue.Count > 0)
+                {
+                    for(int c = 0; c < PreQueue.Count; c++)
+                    {
+                        if (PreQueue.ToList()[c].Contains("index") && PreQueue.ToList()[c].Contains ("list"))
+                        {
+                            Console.WriteLine("Playlist");
+                            List<Video> playlist = new List<Video>();
+                            int index = 0;
+                            for (int i = 0; i < PreQueue.Count; i++)
+                            {
+                                if (PreQueue.ToList()[i].Contains("index") && PreQueue.ToList()[i].Contains("list"))
+                                {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            var templist = await client.GetPlaylistAsync(YoutubeClient.ParsePlaylistId(PreQueue.ToList()[index]));
+                            playlist = templist.Videos.ToList();
+                            List<string> tempholder = PreQueue.ToList();
+                            tempholder.RemoveAt(index);
+                            PreQueue = new Queue<string>(tempholder);
+                            for (int x = 0; x < playlist.Count; x++)
+                            {
+                                PreQueue.Enqueue(playlist[x].GetUrl());
+                            }
+                        }
+                    }
+                }
+                
+                 if (PlayList.Count < 5 && PreQueue.Count > 0)
+                {
+
+                    if (PreQueue.Peek().Contains("www"))
+                    {
+                        SongInfo songInfo = new SongInfo();
+                        await songInfo.AddVideoInfoAudio(PreQueue.Dequeue());
+                        PlayList.Enqueue(songInfo);
+                    }
+                    else
+                    {
+                        //seach youtube
+                    }
+                }
+            }
         }
 
         public async void PlayMusicAsync()

@@ -205,12 +205,11 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
             return CurrentHP;
         }
 
-        public string GetLoot(Player user)
+        public List<BaseItem> GetLoot(Player user)
         {
             List<BaseItem> ReturnLoot = new List<BaseItem>();
             BaseItem TempHolder = null;
 
-            string Lootreturnstring;
             for (int i = 0; i < rng.Next(1, 4); i++)     //chance to get all the way up to 3 loot drops
             {
                 TempHolder = GetDropChance();
@@ -221,17 +220,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Enemy
                 }
 
             }
-            Lootreturnstring = "You recived:";
-            if (ReturnLoot.Count == 0)
-            {
-                Lootreturnstring += " Nothing";
-            }
-            for (int i = 0; i < ReturnLoot.Count; i++)
-            {
-                Lootreturnstring += " " + ReturnLoot[i].Getname();
-
-            }
-            return Lootreturnstring;
+            return ReturnLoot;
         }
 
         public int GetMaxHP()

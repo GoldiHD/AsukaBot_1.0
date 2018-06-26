@@ -19,10 +19,10 @@ namespace AsukaBot_1._0.Classes
 
         public void RunTime()
         {
-            RPG RPGRefrence = SingleTon.GetRPG();
+            RPGMain RPGRefrence = SingleTon.GetRPG();
             if(RPGRefrence == null)
             {
-                RPGRefrence = new RPG();
+                RPGRefrence = new RPGMain();
             }
             while (true)
             {

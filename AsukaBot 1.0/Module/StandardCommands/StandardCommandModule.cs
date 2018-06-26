@@ -135,7 +135,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "module":
-                    await Context.Channel.SendMessageAsync("Standard, DND, Bank, Game, RPG, Music");
+                    await Context.Channel.SendMessageAsync("Standard, DND, Bank, Game, RPGMain, Music");
                     break;
 
                 case "rpg":

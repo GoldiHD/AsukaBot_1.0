@@ -34,7 +34,6 @@ namespace AsukaBot_1._0.Core
                 //event subcribsion
                 client.Log += Log;
                 client.UserJoined += AnnouceUserJoined;
-                //await client.SetGameAsync("Working on code with senpai");
                 await ChangeStatus();
                 await RegisterCommandAsync();
                 await client.LoginAsync(TokenType.Bot, botToken);
@@ -58,7 +57,7 @@ namespace AsukaBot_1._0.Core
 
         public async Task ChangeStatus()
         {
-            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI", "Creating virus, "};
+            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI", "Creating virus", "9/11 was an inside job", "The earth is flat", "Leading the communist party"};
             await client.SetGameAsync(GameStatues[RNG.Next(0, GameStatues.Length)]);
         }
 

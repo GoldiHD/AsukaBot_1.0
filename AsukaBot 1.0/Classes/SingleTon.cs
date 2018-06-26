@@ -13,7 +13,7 @@ namespace AsukaBot_1._0.Classes
         private static ConsoleChecker ConsoleCheckerInstance;
         private static Thread CheckConsole;
         private static Thread RPGThreadCheck;
-        private static RPG RPGInstance;
+        private static RPGMain RPGInstance;
         private static RPGThreadChecker RPGThreadCheckerInstance;
 
         public static void SetClient(Discord.IDiscordClient client)
@@ -72,12 +72,12 @@ namespace AsukaBot_1._0.Classes
             }
         }
 
-        public static RPG GetRPG()
+        public static RPGMain GetRPG()
         {
             return RPGInstance;
         }
 
-        public static void SetRPG(RPG instance)
+        public static void SetRPG(RPGMain instance)
         {
             if(RPGInstance == null)
             {

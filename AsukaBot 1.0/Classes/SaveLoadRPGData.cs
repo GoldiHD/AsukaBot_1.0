@@ -13,7 +13,7 @@ namespace AsukaBot_1._0.Classes
         private string FilePath = Directory.GetCurrentDirectory() + @"\assets\RPGXML.xml";
         private XmlTextWriter writer;
         private XmlTextReader reader;
-        private RPG RPGGateWay;
+        private RPGMain RPGGateWay;
 
         private void CheckForFile()
         {
@@ -22,6 +22,10 @@ namespace AsukaBot_1._0.Classes
             {
                 File.Create(FilePath);
             }
+            else
+            {
+                Console.WriteLine("File not found");
+            }
         }
 
         public void SaveData()
@@ -29,13 +33,13 @@ namespace AsukaBot_1._0.Classes
             CheckForFile();
             if(RPGGateWay == null)
             {
-                RPGGateWay = new RPG();
+                RPGGateWay = new RPGMain();
             }
             writer = new XmlTextWriter(FilePath, Encoding.UTF8);
             writer.WriteStartDocument(true);
             writer.Formatting = Formatting.Indented;
             writer.Indentation = 2;
-            writer.WriteStartElement("RPG");
+            writer.WriteStartElement("RPGMain");
             if (RPGGateWay.GetPlayers() != null)
             {
                 foreach (Player element in RPGGateWay.GetPlayers())
@@ -146,7 +150,7 @@ namespace AsukaBot_1._0.Classes
             CheckForFile();
             if (RPGGateWay == null)
             {
-                RPGGateWay = new RPG();
+                RPGGateWay = new RPGMain();
             }
             reader = new XmlTextReader(FilePath);
             Player TempNewUserHolder = new Player();
