@@ -166,7 +166,7 @@ namespace AsukaBot_1._0.Module.Music
                 {
                     for(int c = 0; c < PreQueue.Count; c++)
                     {
-                        if (PreQueue.ToList()[c].Contains("index") && PreQueue.ToList()[c].Contains ("list"))
+                        if (PreQueue.ToList()[c].Contains ("list"))
                         {
                             Console.WriteLine("Playlist");
                             List<Video> playlist = new List<Video>();
@@ -198,7 +198,11 @@ namespace AsukaBot_1._0.Module.Music
                     if (PreQueue.Peek().Contains("www"))
                     {
                         SongInfo songInfo = new SongInfo();
-                        await songInfo.AddVideoInfoAudio(PreQueue.Dequeue());
+                        try
+                        {
+                            await songInfo.AddVideoInfoAudio(PreQueue.Dequeue());
+                        }
+                        catch { Console.WriteLine("Error in download of video"); };
                         PlayList.Enqueue(songInfo);
                     }
                     else

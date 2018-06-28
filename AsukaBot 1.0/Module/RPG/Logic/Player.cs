@@ -32,6 +32,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private Stopwatch PvpRequest = new Stopwatch();
         public StatsModifer FeatsSystem;
         private PVPCombatControler MyPVPCombat;
+        public int AreanaPoints = 0;
 
         public Player()
         {

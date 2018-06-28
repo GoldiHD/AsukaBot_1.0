@@ -195,6 +195,18 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
         public Stopwatch RoundTimeOut = new Stopwatch();
         private bool AttackersTurn;
 
+        public Player GetTheOtherPlayer(Player playerAsking)
+        {
+            if(playerAsking == Defender)
+            {
+                return Attacker;
+            }
+            else
+            {
+                return Defender;
+            }
+        }
+
         public void AssignUsers(Player attacker, Player defender)
         {
             Attacker = attacker;
@@ -220,6 +232,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Questing
         {
             Attacker.SetPlayerStates(PlayerStates.Rest);
             Defender.SetPlayerStates(PlayerStates.Rest);
+
         }
 
         public string AttackOtherPlayer(Player UserAttackRequest)

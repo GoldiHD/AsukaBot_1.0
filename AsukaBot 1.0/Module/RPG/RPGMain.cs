@@ -678,7 +678,15 @@ namespace AsukaBot_1._0.Module.Music.Logic
                     case PlayerStates.Pvp:
                         if (AllPlayers[temp].GetPVPCombatControler() != null)
                         {
-                            await ReplyAsync(AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp]));
+
+                            builder.AddField("Attack", (AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp])));
+                            if(AllPlayers[temp].GetPVPCombatControler().GetTheOtherPlayer(AllPlayers[temp]).GetStats().GetVitallity().GetMyHealth() < 1)
+                            {
+                                builder.AddField("Battle Resualt", AllPlayers[temp].GetUsername() + " won over " + AllPlayers[temp].GetPVPCombatControler().GetTheOtherPlayer(AllPlayers[temp]).GetUsername() + ", and won 10 arena points");
+                                AllPlayers[temp].GetPVPCombatControler().EndBattle();
+                                StoryMaker.PlayerBattleControler.Remove(AllPlayers[temp].GetPVPCombatControler());
+                                AllPlayers[temp].AreanaPoints += 10;
+                            }
 
                         }
                         else
@@ -1066,7 +1074,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         #endregion
 
         #region Market
-        [Command("_CheckMarket")]
+        [Command("_Shop")]
         public async Task CheckMarketItems(int Page = 1, string itemtype = null)
         {
             int counter = 0;
@@ -1306,7 +1314,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
 
         }
-        [Command("_MarketBuy")]
+        [Command("_ShopBuy")]
         public async Task BuyFromMarket(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
             bool itemFound = false;
@@ -1350,7 +1358,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("_MarketSell")]
+        [Command("_ShopSell")]
         public async Task SellOnMarket(int amount, [Remainder]string itemName)
         {
             bool itemInInventory = false;
