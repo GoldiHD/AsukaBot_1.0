@@ -169,6 +169,7 @@
     <Compile Include="Module\RPG\Logic\Classes\ClassBase.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\EnemyBase.cs" />
     <Compile Include="Module\RPG\Logic\Enemy\MonsterDatabase.cs" />
+    <Compile Include="Module\RPG\Logic\Guilds\Guild.cs" />
     <Compile Include="Module\RPG\Logic\Inventory.cs" />
     <Compile Include="Module\RPG\Logic\Items\ArmorItem.cs" />
     <Compile Include="Module\RPG\Logic\Items\BaseItem.cs" />

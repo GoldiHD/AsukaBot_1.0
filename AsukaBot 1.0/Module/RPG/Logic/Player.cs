@@ -3,6 +3,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using System.Diagnostics;
 using AsukaBot_1._0.Module.RPG.Logic.Classes;
+using AsukaBot_1._0.Module.RPG.Logic.Guilds;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
@@ -33,6 +34,8 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         public StatsModifer FeatsSystem;
         private PVPCombatControler MyPVPCombat;
         public int AreanaPoints = 0;
+        public Guild MyGuild;
+
 
         public Player()
         {
@@ -46,8 +49,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
 
         public void SetClass(ClassBase PickedClass)
         {
-            MyClass = PickedClass;
-                       
+            MyClass = PickedClass;          
         }
 
         public void PlayerRequestTimer()

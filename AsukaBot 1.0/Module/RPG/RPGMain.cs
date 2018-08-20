@@ -8,6 +8,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Items;
 using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using AsukaBot_1._0.Classes;
 using AsukaBot_1._0.Module.RPG.Logic.Classes;
+using AsukaBot_1._0.Module.RPG.Logic.Guilds;
 
 namespace AsukaBot_1._0.Module.Music.Logic
 {
@@ -17,6 +18,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         public Inventory CheckUpList = new Inventory();
         private static List<Player> AllPlayers;
         private bool Loaded = false;
+        private static GuildManager guildmanager;
 
         public RPGMain()
         {
@@ -26,6 +28,10 @@ namespace AsukaBot_1._0.Module.Music.Logic
                 AllPlayers = new List<Player>();
                 AllPlayers.Add(new Player());
                 AllPlayers[0].GiveNewQuestManager();
+            }
+            if (guildmanager == null)
+            {
+                guildmanager = new GuildManager();
             }
         }
 
@@ -549,7 +555,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                     {
                                         builder.AddField("Xp gain", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetXP() * 2);
                                     }
-                                    builder.AddField("Loot",  StackItem(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp])));
+                                    builder.AddField("Loot", StackItem(AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetLoot(AllPlayers[temp])));
                                     try
                                     {
                                         builder.AddField("Gold", AllPlayers[temp].GetQuestManager().GetStoryMaker().GetEnemy().GetGold(AllPlayers[temp], 1)).ToString();
@@ -680,7 +686,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
                         {
 
                             builder.AddField("Attack", (AllPlayers[temp].GetPVPCombatControler().AttackOtherPlayer(AllPlayers[temp])));
-                            if(AllPlayers[temp].GetPVPCombatControler().GetTheOtherPlayer(AllPlayers[temp]).GetStats().GetVitallity().GetMyHealth() < 1)
+                            if (AllPlayers[temp].GetPVPCombatControler().GetTheOtherPlayer(AllPlayers[temp]).GetStats().GetVitallity().GetMyHealth() < 1)
                             {
                                 builder.AddField("Battle Resualt", AllPlayers[temp].GetUsername() + " won over " + AllPlayers[temp].GetPVPCombatControler().GetTheOtherPlayer(AllPlayers[temp]).GetUsername() + ", and won 10 arena points");
                                 AllPlayers[temp].GetPVPCombatControler().EndBattle();
@@ -1513,6 +1519,103 @@ namespace AsukaBot_1._0.Module.Music.Logic
         }
         #endregion
 
+        #region Guild
+        [Command("TransferLeadership")]
+        public async Task TransferGuildLeadership([Remainder]string guildmemeberName)
+        {
+            int temp = DoIExist(Context.Message.Author.Username);
+            if (GuildManager.guilds.Count != 0)
+            {
+                if (AllPlayers[temp].MyGuild != null)
+                {
+                    if (AllPlayers[temp].MyGuild.Leader == AllPlayers[temp])
+                    {
+                        if(AllPlayers.Exists(x => x.GetUsername().ToLower().Equals(guildmemeberName.ToLower())))
+                        {
+                            AllPlayers[temp].MyGuild.SetLeader(AllPlayers[temp].MyGuild.guildMemebers.Find(x => x.User.GetUsername().ToLower() == guildmemeberName.ToLower()).User);
+                            await ReplyAsync("Leadership has been transferd to " + AllPlayers[temp].MyGuild.guildMemebers.Find(x => x.User.GetUsername().ToLower() == guildmemeberName.ToLower()).User.GetUsername());
+                        }
+                    }
+                }
+            }
+        }
+
+        [Command("JoinGuild")]
+        public async Task JoinGuild([Remainder] string guildname)
+        {
+            Guild EasyAccessGuildContainer;
+            int temp = DoIExist(Context.Message.Author.Username);
+            if (AllPlayers[temp].MyGuild == null)
+            {
+                if (GuildManager.guilds.Count > 0)
+                {
+                    if (GuildManager.guilds.Exists(x => x.guildName.ToLower().Equals(guildname.ToLower())))
+                    {
+                        EasyAccessGuildContainer = GuildManager.guilds.Find(x => x.guildName.ToLower().Equals(guildname.ToLower()));
+                        if (EasyAccessGuildContainer.InviteOnly)
+                        {
+                            await ReplyAsync("This guild is invite only");
+                        }
+                        else
+                        {
+                            EasyAccessGuildContainer.guildMemebers.Add(new GuildMemebers(AllPlayers[temp], GuildRank.Recruit));
+                            await ReplyAsync("You joined" + guildname);
+                        }
+                    }
+                    else
+                    {
+                        await ReplyAsync("no guild with that name");
+                    }
+                }
+                else
+                {
+                    await ReplyAsync("No guilds exists");
+                }
+            }
+            else
+            {
+                await ReplyAsync("you're already in a guild");
+            }
+        }
+
+        [Command("LeaveGuild")]
+        public async Task LeaveGuild()
+        {
+            int temp = DoIExist(Context.Message.Author.Username);
+            if (AllPlayers[temp].MyGuild == null)
+            {
+                await ReplyAsync("You're not currently in a guild");
+            }
+            else
+            {
+                AllPlayers[temp].MyGuild.guildMemebers.Remove(AllPlayers[temp].MyGuild.guildMemebers.Find(x => x.User == AllPlayers[temp]));
+                AllPlayers[temp].MyGuild = null;
+            }
+        }
+
+        [Command("CreateGuild")]
+        public async Task CreateGuild([Remainder] string guildname)
+        {
+            int temp = DoIExist(Context.User.Username);
+            if (AllPlayers[temp].GetPlayerLvl() >= 5)
+            {
+                if (AllPlayers[temp].GetInventory().GetGold() >= 500)
+                {
+                    guildmanager.CreateGuild(guildname, AllPlayers[temp]);
+                }
+                else
+                {
+                    await ReplyAsync("Sorry but you don't have enought for the 500 gold fee, there is for creating a guild");
+                }
+            }
+            else
+            {
+                await ReplyAsync("Sorry but you're not high enought level to create a guild");
+            }
+        }
+
+        #endregion
+
         private void CheckHealth(string username)
         {
             AllPlayers[DoIExist(username)].GetStats().GetVitallity().GetMyHealth();
@@ -1524,8 +1627,6 @@ namespace AsukaBot_1._0.Module.Music.Logic
             {
                 AllPlayers = new List<Player>();
                 AllPlayers.Add(new Player(username));
-
-
             }
 
             bool DoesPlayerExists = false;
@@ -1612,11 +1713,11 @@ namespace AsukaBot_1._0.Module.Music.Logic
             {
                 if (element.GetAmount() > 0)
                 {
-                    output += element.GetItem().Getname() + " (x"+element.GetAmount()+")\n";
+                    output += element.GetItem().Getname() + " (x" + element.GetAmount() + ")\n";
                 }
                 else
                 {
-                    output += element.GetAmount()+"\n";
+                    output += element.GetAmount() + "\n";
                 }
             }
 
