@@ -127,7 +127,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "standard":
-                    await Context.Channel.SendMessageAsync("!Pic, !Qoute, !Purge, !Bestgrill, !Smug");
+                    await Context.Channel.SendMessageAsync("!Pic, !Qoute, !Purge, !Bestgrill, !Smug, !come over kazuma, !roadmap, !PickR, !Chibi, !asuka, shutdown ");
                     break;
 
                 case "dnd":

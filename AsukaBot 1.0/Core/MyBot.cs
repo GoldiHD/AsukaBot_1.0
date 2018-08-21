@@ -75,7 +75,7 @@ namespace AsukaBot_1._0.Core
 
         public async Task ChangeStatus()
         {
-            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI", "Creating virus", "9/11 was an inside job", "The earth is flat", "Leading the communist party", "Making memes", "Ruining peoples lifes", "iuewfusdnkvnsoefnsef, i feel a sleep on the keyboard again", "Being a chad", "delaying berserk", "Reading shitty managa" };
+            string[] GameStatues = new string[] { "Working on code with senpai", "Deleting code", "Selling user data to FBI", "Creating virus", "9/11 was an inside job", "The earth is flat", "Leading the communist party", "Making memes", "Ruining peoples lifes", "iuewfusdnkvnsoefnsef, i feel a sleep on the keyboard again", "Being a chad", "delaying berserk", "Reading shitty managa", "Investigating 9/11", "totally not prepering for the singularity" };
             await client.SetGameAsync(GameStatues[RNG.Next(0, GameStatues.Length)]);
         }
 
