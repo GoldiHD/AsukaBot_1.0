@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AsukaBot_1._0.Module.RPG.Bank;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Guilds
 
     public class Guild
     {
+        private RPGBankAccount guildBank;
         public Player Leader;
         public string guildName; 
         public bool InviteOnly = false;
@@ -55,6 +57,21 @@ namespace AsukaBot_1._0.Module.RPG.Logic.Guilds
         {
             Leader = leader;
         }
+
+        public void DonateToGuild(int amount, Player user)
+        {
+            guildBank.AddToBalance(amount, user);
+        }
+
+        public int GetguildRiches()
+        {
+            return guildBank.ViewAccount();
+        }
+
+    }
+
+    public class GuiildUpGradeModule
+    {
 
     }
 

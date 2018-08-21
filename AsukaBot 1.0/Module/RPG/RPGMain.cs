@@ -580,7 +580,8 @@ namespace AsukaBot_1._0.Module.Music.Logic
                                 }
                                 else
                                 {
-                                    builder.AddField("Dead", "you have died and will escape the mission with no loot");
+                                    builder.AddField("Dead", "you have died and will escape the mission with no loot and lost a bit of the gold you had on you");
+                                    AllPlayers[temp].GetInventory().SetGold((int)(AllPlayers[temp].GetInventory().GetGold() - (AllPlayers[temp].GetInventory().GetGold() * 0.2f)));
                                     AllPlayers[temp].SetPlayerStates(PlayerStates.Rest);
                                     AllPlayers[temp].SetQuestManager(null);
                                     AllPlayers[temp].GetStats().GetVitallity().GainFullHealth();
@@ -1614,6 +1615,14 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
+        #endregion
+
+        #region Bank
+        [Command("")]
+        public async Task DepositToBank(int amount)
+        {
+            int temp = DoIExist(Context.Message.Author.Username);
+        }
         #endregion
 
         private void CheckHealth(string username)

@@ -4,6 +4,7 @@ using AsukaBot_1._0.Module.RPG.Logic.Questing;
 using System.Diagnostics;
 using AsukaBot_1._0.Module.RPG.Logic.Classes;
 using AsukaBot_1._0.Module.RPG.Logic.Guilds;
+using AsukaBot_1._0.Module.RPG.Bank;
 
 namespace AsukaBot_1._0.Module.RPG.Logic
 {
@@ -35,6 +36,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
         private PVPCombatControler MyPVPCombat;
         public int AreanaPoints = 0;
         public Guild MyGuild;
+        private RPGBankAccount bankAccount;
 
 
         public Player()
@@ -322,7 +324,6 @@ namespace AsukaBot_1._0.Module.RPG.Logic
             int DamgeAfterAc = 0;
             int weaponDamage = 0;
             float DamgeModifyer;
-            bool ExtraAttack = false;
             switch(MyAttackType)
             {
                 case AttackType.Melee:
@@ -370,7 +371,7 @@ namespace AsukaBot_1._0.Module.RPG.Logic
                                 Chance = RNG.Next(0, 100);
                                 if (Chance < 26)
                                 {
-                                    ExtraAttack = true;
+                                    
                                 }
                                 break;
 
