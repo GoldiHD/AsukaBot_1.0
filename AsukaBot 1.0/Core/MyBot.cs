@@ -20,29 +20,47 @@ namespace AsukaBot_1._0.Core
         public async Task Start()
         {
             Console.WriteLine("Created by Lars H M/Goldi");
-            //if(File.Exists(Directory.GetCurrentDirectory() + "//assets"))
-            if (File.Exists(Directory.GetCurrentDirectory() + "//assets//credentials.txt"))
+            if (Directory.Exists(Directory.GetCurrentDirectory() + "//assets"))
             {
+                if (File.Exists(Directory.GetCurrentDirectory() + "//assets//credentials.txt"))
+                {
 
-                client = new DiscordSocketClient();
-                command = new CommandService();
+                    client = new DiscordSocketClient();
+                    command = new CommandService();
 
-                botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
-                SingleTon.GetConsoleCheckerInstance().StartUp();
-                SingleTon.GetRPGThread().StartUp();
-                SingleTon.SetClient(client);
-                //event subcribsion
-                client.Log += Log;
-                client.UserJoined += AnnouceUserJoined;
-                await ChangeStatus();
-                await RegisterCommandAsync();
-                await client.LoginAsync(TokenType.Bot, botToken);
-                await client.StartAsync();
-                await Task.Delay(-1);
+                    botToken = File.ReadAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt").Remove(0, 15);
+                    SingleTon.GetRPGThread().StartUp();
+                    SingleTon.SetClient(client);
+                    //event subcribsion
+                    client.Log += Log;
+                    client.UserJoined += AnnouceUserJoined;
+                    await ChangeStatus();
+                    await RegisterCommandAsync();
+                    try
+                    {
+                        await client.LoginAsync(TokenType.Bot, botToken);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("your token seems to be incorrect, check credentials.txt and see if you have given it the correct token yet\n[Press enter to continue]");
+                        Console.ReadKey();
+                        Environment.Exit(0);
+                    }
+                    SingleTon.GetConsoleCheckerInstance().StartUp();
+                    await client.StartAsync();
+                    await Task.Delay(-1);
+                }
+                else
+                {
+                    Console.WriteLine("no credentials file could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt \nso one have been created");
+                    File.WriteAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt", "Discord token: ");
+                    Console.ReadKey();
+                }
             }
             else
             {
-                Console.WriteLine("no credentials file could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt \nso one have been created");
+                Console.WriteLine("no credentials file could be found at: " + Directory.GetCurrentDirectory() + "//assets//credentials.txt \nso one have been created and you might be missing some of the asset files intented for the programs");
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "//assets");
                 File.WriteAllText(Directory.GetCurrentDirectory() + "//assets//credentials.txt", "Discord token: ");
                 Console.ReadKey();
             }
@@ -94,6 +112,6 @@ namespace AsukaBot_1._0.Core
     }
     public enum ModuleType
     {
-        Bank, Music, Standard, RPG, DnD
+        Bank, Music, Standard, RPG, DnD, Math
     }
 }
