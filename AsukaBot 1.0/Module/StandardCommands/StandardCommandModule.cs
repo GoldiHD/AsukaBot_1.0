@@ -139,7 +139,7 @@ namespace AsukaBot_1._0.Module.StandardCommands
                     break;
 
                 case "rpg":
-                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_use, !_give\n!_encounter,!_dungeon, !_pvp, !_accepct, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point), !_class\n!_shop, !_shopsell !_shopbuy\n!_mine, !_chop, !_forage");
+                    await Context.Channel.SendMessageAsync("!_inv, !_itemwiki(this is only here for temp work), !_itemlist, !_Iteminfo(item name), !_equip, !_use, !_give, !_encounter,!_dungeon, !_pvp, !_accepct, !_escape, !_attack, !_combat, !_stats, !_status, !_power(stat point), !_pow(stat point), !_magic(stat point), !_mag(stat point), !_dexterity(stat point), !_dex(stat point), !_intellegenc(stat point), !_int(stat point), !_vitallity(stat point), !_vit(stat point), !_luck(stat point), !_class, !_checkmarket, !_marketsell !_marketbuy, !_mine, !_chop, !_forage");
                     break;
 
                 case "music":

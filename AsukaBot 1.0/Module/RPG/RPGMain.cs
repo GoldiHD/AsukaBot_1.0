@@ -1081,7 +1081,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
         #endregion
 
         #region Market
-        [Command("_Shop")]
+        [Command("_CheckMarket")]
         public async Task CheckMarketItems(int Page = 1, string itemtype = null)
         {
             int counter = 0;
@@ -1321,7 +1321,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
 
 
         }
-        [Command("_ShopBuy")]
+        [Command("_MarketBuy")]
         public async Task BuyFromMarket(string para1, string para2 = null, string para3 = null, string para4 = null)
         {
             bool itemFound = false;
@@ -1365,7 +1365,7 @@ namespace AsukaBot_1._0.Module.Music.Logic
             }
         }
 
-        [Command("_ShopSell")]
+        [Command("_MarketSell")]
         public async Task SellOnMarket(int amount, [Remainder]string itemName)
         {
             bool itemInInventory = false;
