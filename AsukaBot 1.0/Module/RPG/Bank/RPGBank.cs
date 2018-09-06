@@ -27,7 +27,6 @@ namespace AsukaBot_1._0.Module.RPG.Bank
 
     class RPGBankAccount
     {
-        if()
         private int CurrentBalance = 0;
 
         public bool AddToBalance(int amount, Player user)
